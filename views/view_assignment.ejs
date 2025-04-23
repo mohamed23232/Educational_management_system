@@ -9,26 +9,27 @@
     <h1>Assignments</h1>
 
     <ul>
-        <% assignments.forEach(assignment=> { %>
+        <% assignments.forEach(assignment => { %>
             <li>
-                <strong>
-                    <%= assignment.title %>
-                </strong><br>
-                <em>Due:</em>
-                <%= new Date(assignment.dueDate).toDateString() %><br>
-                    <em>Description:</em>
-                    <%= assignment.description %><br>
-
-                        <% if (userRole==='teacher' ) { %>
-                            <a href="/assignment/edit/<%= assignment._id %>">Edit</a> |
-                            <a href="/assignment/delete/<%= assignment._id %>">Delete</a>
-                            <% } %>
-                        
+                <strong><%= assignment.title %></strong><br>
+                <em>Due:</em> <%= new Date(assignment.dueDate).toDateString() %><br>
+                <em>Description:</em> <%= assignment.description %><br>
+    
+                <% if (userRole === 'teacher') { %>
+                    <a href="/assignment/edit/<%= assignment._id %>">Edit</a> |
+                    <a href="/assignment/delete/<%= assignment._id %>">Delete</a>
+                <% } else if (userRole === 'student') { %>
+                    <!-- Submission form for student -->
+                    <form action="/submission/<%= assignment._id %>" method="POST">
+                        <label for="content">Your Submission:</label><br>
+                        <textarea name="content" rows="3" cols="50" required></textarea><br>
+                        <button type="submit">Submit</button>
+                    </form>
+                <% } %>
             </li>
             <hr>
-            <% }) %>
+        <% }) %>
     </ul>
-
     <% if (userRole==='teacher' ) { %>
         <a href="/assignment/create">+ Create New Assignment</a><br>
         <% } %>

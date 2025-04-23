@@ -77,11 +77,24 @@ function ensureAuthenticated(req, res, next) {
 }
 
 // Student Dashboard
-// Simplified student_dashboard (if not listing assignments directly here)
-router.get('/student_dashboard', ensureAuthenticated, (req, res) => {
-    if (req.session.user.role !== 'student') return res.status(403).send('Access denied');
-    res.render('student_dashboard', { user: req.session.user });
+router.get('/student_dashboard', ensureAuthenticated, async (req, res) => {
+    if (req.session.user.role !== 'student') {
+        return res.status(403).send('Access denied');
+    }
+
+    try {
+        // Retrieve the assignments related to the student (you might want to filter assignments for the specific student)
+        const assignments = await Assignment.find({});
+
+        // Render the dashboard and pass the user and assignments to the view
+        console.log(req.session.user);
+        res.render('student_dashboard', { user: req.session.user, assignments: assignments });
+    } catch (err) {
+        console.error('Error fetching assignments:', err);
+        res.send('Error fetching assignments.');
+    }
 });
+
 
 // Teacher Dashboard
 router.get('/teacher_dashboard', ensureAuthenticated, async (req, res) => {
