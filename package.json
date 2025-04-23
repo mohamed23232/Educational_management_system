@@ -1,0 +1,32 @@
+{
+  "name": "student_portal_project",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/mohamed23232/Educational_management_system#readme",
+  "bugs": {
+    "url": "https://github.com/mohamed23232/Educational_management_system/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mohamed23232/Educational_management_system.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "connect-mongo": "^5.1.0",
+    "dotenv": "^16.5.0",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "express-session": "^1.18.1",
+    "mongoose": "^8.13.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}

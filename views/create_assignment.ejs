@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Create Assignment</title>
+</head>
+
+<body>
+  <h1>Create a New Assignment</h1>
+
+  <form action="/assignment" method="POST">
+    <label for="title">Title:</label><br />
+    <input type="text" name="title" id="title" required /><br /><br />
+
+    <label for="description">Description:</label><br />
+    <textarea name="description" id="description" rows="5" required></textarea><br /><br />
+
+    <label for="dueDate">Due Date:</label><br />
+    <input type="date" name="dueDate" id="dueDate" required /><br /><br />
+
+    <!-- <label for="subject">Subject:</label><br />
+    <select name="subject" id="subject" required>
+      <% subjects.forEach(subject=> { %>
+        <option value="<%= subject._id %>">
+          <%= subject.name %>
+        </option>
+        <% }) %>
+    </select><br /><br /> -->
+
+    <a href="/teacher_dashboard">Back to Dashboard</a>
+
+
+    <button type="submit">Create Assignment</button>
+  </form>
+
+</body>
+
+</html>

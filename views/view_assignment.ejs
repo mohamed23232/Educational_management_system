@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Assignments</title>
+</head>
+
+<body>
+    <h1>Assignments</h1>
+
+    <ul>
+        <% assignments.forEach(assignment=> { %>
+            <li>
+                <strong>
+                    <%= assignment.title %>
+                </strong><br>
+                <em>Due:</em>
+                <%= new Date(assignment.dueDate).toDateString() %><br>
+                    <em>Description:</em>
+                    <%= assignment.description %><br>
+
+                        <% if (userRole==='teacher' ) { %>
+                            <a href="/assignment/edit/<%= assignment._id %>">Edit</a> |
+                            <a href="/assignment/delete/<%= assignment._id %>">Delete</a>
+                            <% } %>
+            </li>
+            <hr>
+            <% }) %>
+    </ul>
+
+    <% if (userRole==='teacher' ) { %>
+        <a href="/assignment/create">+ Create New Assignment</a><br>
+        <% } %>
+
+            <a href="/auth/<%= userRole %>_dashboard">Back to Dashboard</a>
+</body>
+
+</html>
