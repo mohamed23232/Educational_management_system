@@ -6,30 +6,19 @@
 </head>
 
 <body>
-    <h1>Welcome <%= user.name || 'Student' %>!</h1>
-    <h2>Assignments</h2>
-
-    <% if (assignments.length===0) { %>
-        <p>No assignments available yet.</p>
-        <% } else { %>
-            <ul>
-                <% assignments.forEach(assignment=> { %>
-                    <li>
-                        <strong>
-                            <%= assignment.title %>
-                        </strong><br>
-                        <p>
-                            <%= assignment.description %>
-                        </p>
-                        <form action="/api/submissions" method="POST">
-                            <input type="hidden" name="assignmentId" value="<%= assignment._id %>">
-                            <textarea name="answer" placeholder="Your answer here..." required></textarea>
-                            <button type="submit">Submit</button>
-                        </form>
-                    </li>
-                    <% }) %>
-            </ul>
-            <% } %>
+    <h1>Welcome <%= user.name%>!</h1>
+    
+    <!-- Display options -->
+    <h2>What would you like to do?</h2>
+    <ul>
+        <li><a href="/assignment/view">View Assignments</a></li> <!-- Link to view assignments -->
+        <li>
+            <!-- Logout button -->
+            <form action="/auth/logout" method="GET">
+                <button type="submit">Logout</button>
+            </form>
+        </li>
+    </ul>
 </body>
 
 </html>

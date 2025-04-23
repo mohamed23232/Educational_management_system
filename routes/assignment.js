@@ -44,12 +44,12 @@ router.post('/', async (req, res) => {
 
 // ✅ New route: View all assignments for teachers (linked from dashboard)
 router.get('/view', async (req, res) => {
-  if (req.session.user?.role !== 'teacher') return res.status(403).send('Access denied');
 
   try {
     const assignments = await Assignment.find();
     console.log('Assignments fetched:', assignments);
-    res.render('view_assignment', { assignments, userRole: 'teacher' });
+    if (req.session.user?.role == 'teacher')res.render('view_assignment', { assignments, userRole: 'teacher' });
+    if (req.session.user?.role == 'student')res.render('view_assignment', { assignments, userRole: 'student' });
   } catch (err) {
     console.error('Error fetching assignments:', err);
     res.status(500).send('Error fetching assignments');
