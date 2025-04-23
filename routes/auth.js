@@ -2,8 +2,8 @@ const express = require('express');
 const router = express.Router();
 const Teacher = require('../models/teacher');
 const Student = require('../models/student');
+const Admin = require('../models/admin');
 const Assignment = require('../models/assignment');
-const Subject = require('../models/subject');
 const bcrypt = require('bcrypt');
 
 // Login Route
@@ -20,7 +20,7 @@ router.get('/register', (req, res) => {
 // Handle Register for Teacher or Student
 router.post('/register', async (req, res) => {
     const { username, password, role } = req.body; // username instead of email
-
+    console.log(role);
     if (role === 'teacher') {
         const existingTeacher = await Teacher.findOne({ username });
         if (existingTeacher) return res.send('Teacher with this username already exists.');
@@ -37,6 +37,14 @@ router.post('/register', async (req, res) => {
         const newStudent = new Student({ username, password: hashedPassword });
         await newStudent.save();
         res.redirect('/auth/login');
+    }else if (role === 'admin') {
+        const existingAdmin = await Admin.findOne({ username });
+        if (existingAdmin) return res.send('Admin with this username already exists.');
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const newAdmin = new Admin({ username, password: hashedPassword });
+        await newAdmin.save();
+        res.redirect('/auth/login');    
     } else {
         res.send('Invalid role selected.');
     }
@@ -52,8 +60,7 @@ router.post('/login', async (req, res) => {
         if (!(await bcrypt.compare(password, user.password))) {
             return res.send('Invalid credentials');
         }
-        req.session.user = { id: user._id, name: user.username, role: 'teacher' };
-        console.log("name", req.session.user.name);
+        req.session.user = { id: user._id, name: user.name, role: 'teacher' };
         return res.redirect('/auth/teacher_dashboard');
     }
 
@@ -63,9 +70,17 @@ router.post('/login', async (req, res) => {
         if (!(await bcrypt.compare(password, user.password))) {
             return res.send('Invalid credentials');
         }
-        req.session.user = { id: user._id, name: user.username, role: 'student' };
-
+        req.session.user = { id: user._id, name: user.name, role: 'student' };
         return res.redirect('/auth/student_dashboard');
+    }    
+    // Check if admin
+    user = await Admin.findOne({ username });
+    if (user) {
+        if (!(await bcrypt.compare(password, user.password))) {
+            return res.send('Invalid credentials');
+        }
+        req.session.user = { id: user._id, name: user.name, role: 'admin' };
+        return res.redirect('/auth/admin_dashboard');
     }
 
     res.send('No user found with this username.');
@@ -93,6 +108,18 @@ router.get('/teacher_dashboard', ensureAuthenticated, async (req, res) => {
     } catch (err) {
         console.error('Error fetching assignments:', err);
         res.send('Error fetching assignments.');
+    }
+});
+// Admin Dashboard
+router.get('/admin_dashboard', ensureAuthenticated, async (req, res) => {
+    if (req.session.user.role !== 'admin') return res.status(403).send('Access denied');
+
+    try {
+        // const assignments = await Assignment.find({ teacherId: req.session.user.id });
+        res.render('admin_dashboard', { user: req.session.user});
+    } catch (err) {
+        console.error('Error fetching admin:', err);
+        res.send('Error fetching admin.');
     }
 });
 
