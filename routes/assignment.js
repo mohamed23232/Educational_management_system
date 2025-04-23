@@ -47,7 +47,18 @@ router.get('/view', async (req, res) => {
   if (req.session.user?.role !== 'teacher') return res.status(403).send('Access denied');
 
   try {
-    const assignments = await Assignment.find();
+    // fetch all assignments based on the subjects the teacher is teaching
+
+    const teacherId = req.session.user.id;
+
+    // Step 1: Get the subjects the teacher teaches
+    const subjects = await Subject.find({ teacher: teacherId }).select('_id');
+    const subjectIds = subjects.map(subject => subject._id);
+
+    // Step 2: Get assignments linked to those subjects
+    const assignments = await Assignment.find({ subject: { $in: subjectIds } }).populate('subject');
+    console.log('Assignments fetched:', assignments);
+
     console.log('Assignments fetched:', assignments);
     res.render('view_assignment', { assignments, userRole: 'teacher' });
   } catch (err) {

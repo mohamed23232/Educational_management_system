@@ -18,6 +18,16 @@
     <label for="dueDate">Due Date:</label><br />
     <input type="date" name="dueDate" id="dueDate" required /><br /><br />
 
+    <!--add the subject field-->
+    <label for="subject">Subject:</label><br />
+    <select name="subject" id="subject" required>
+      <% subjects.forEach(subject=> { %>
+        <option value="<%= subject._id %>">
+          <%= subject.name %>
+        </option>
+        <% }) %>
+    </select><br /><br />
+
     <!-- <label for="subject">Subject:</label><br />
     <select name="subject" id="subject" required>
       <% subjects.forEach(subject=> { %>
