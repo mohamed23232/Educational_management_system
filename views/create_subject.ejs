@@ -2,13 +2,13 @@
 <html>
 
 <head>
-  <title>Create Assignment</title>
+  <title>Create Subject</title>
 </head>
 
 <body>
-  <h1>Create a New Assignment</h1>
+  <h1>Create a New Subject</h1>
 
-  <form action="/assignment" method="POST">
+  <form action="/subject" method="POST">
     <label for="title">Title:</label><br />
     <input type="text" name="title" id="title" required /><br /><br />
 
@@ -17,6 +17,16 @@
 
     <label for="dueDate">Due Date:</label><br />
     <input type="date" name="dueDate" id="dueDate" required /><br /><br />
+
+    <!--add the subject field-->
+    <label for="subject">Subject:</label><br />
+    <select name="subject" id="subject" required>
+      <% subjects.forEach(subject=> { %>
+        <option value="<%= subject._id %>">
+          <%= subject.name %>
+        </option>
+        <% }) %>
+    </select><br /><br />
 
     <!-- <label for="subject">Subject:</label><br />
     <select name="subject" id="subject" required>
@@ -27,7 +37,7 @@
         <% }) %>
     </select><br /><br /> -->
 
-    <a href="/teacher_dashboard">Back to Dashboard</a>
+    <a href="/admin_dashboard">Back to Dashboard</a>
 
 
     <button type="submit">Create Assignment</button>

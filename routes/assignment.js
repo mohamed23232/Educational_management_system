@@ -22,7 +22,7 @@ router.post('/', async (req, res) => {
   try {
     const { title, description, dueDate, subject } = req.body;
 
-    if (!title || !dueDate || !subject) {
+    if (!title || !dueDate ) {
       return res.status(400).send('Missing required fields');
     }
 
@@ -46,18 +46,7 @@ router.post('/', async (req, res) => {
 router.get('/view', async (req, res) => {
 
   try {
-    // fetch all assignments based on the subjects the teacher is teaching
-
-    const teacherId = req.session.user.id;
-
-    // Step 1: Get the subjects the teacher teaches
-    const subjects = await Subject.find({ teacher: teacherId }).select('_id');
-    const subjectIds = subjects.map(subject => subject._id);
-
-    // Step 2: Get assignments linked to those subjects
-    const assignments = await Assignment.find({ subject: { $in: subjectIds } }).populate('subject');
-    console.log('Assignments fetched:', assignments);
-
+    const assignments = await Assignment.find();
     console.log('Assignments fetched:', assignments);
     if (req.session.user?.role == 'teacher')res.render('view_assignment', { assignments, userRole: 'teacher' });
     if (req.session.user?.role == 'student')res.render('view_assignment', { assignments, userRole: 'student' });

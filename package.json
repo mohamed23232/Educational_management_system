@@ -24,7 +24,8 @@
     "ejs": "^3.1.10",
     "express": "^5.1.0",
     "express-session": "^1.18.1",
-    "mongoose": "^8.13.2"
+    "mongoose": "^8.13.2",
+    "student_portal_project": "file:"
   },
   "devDependencies": {
     "nodemon": "^3.1.9"
