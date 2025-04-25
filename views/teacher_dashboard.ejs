@@ -9,13 +9,11 @@
 <body>
     <h1>Welcome, <%= user.name %> (Teacher)</h1>
 
-    <div>
-        <ul>
-            <li><a href="/assignment/create" class="button">Create Assignment</a></li>
-            <li><a href="/assignment/view" class="button">View Assignments</a></li>
-            <li><a href="/subject/view" class="button">View Subjects</a></li>
-        </ul>
-    </div>
+    <ul>
+        <li><a href="/assignment/create" class="button">Create Assignment</a></li>
+        <li><a href="/assignment/view" class="button">View Assignments</a></li>
+        <li><a href="/subject/view" class="button">View Subjects</a></li>
+    </ul>
     <form action="/auth/logout" method="GET">
         <button type="submit">Logout</button>
     </form>

@@ -1,23 +1,37 @@
-<h2>Edit Assignment</h2>
-<form action="/assignment/edit/<%= assignment._id %>" method="POST">
-    <label>Title:</label>
-    <input type="text" name="title" value="<%= assignment.title %>" required><br>
+<!DOCTYPE html>
+<html>
 
-    <label>Description:</label>
-    <textarea name="description"><%= assignment.description %></textarea><br>
-    <label for="dueDate">Due Date and Time:</label><br />
-    <input type="datetime-local" name="dueDate" id="dueDate" required min="<%= new Date().toISOString().slice(0, 16) %>"
-        value="<%= new Date(assignment.dueDate).toISOString().slice(0, 16) %>"
-        placeholder="<%= new Date(assignment.dueDate).toISOString().slice(11, 16) %>" /><br /><br />
+<head>
+    <title>Edit Assignment</title>
+    <link rel="stylesheet" href="/edit_assignment.css"> <!-- Link to external CSS for styling -->
+</head>
 
-    <label>Subject:</label>
-    <select name="subject" required>
-        <% subjects.forEach(s=> { %>
-            <option value="<%= s._id %>" <%=assignment.subject.equals(s._id) ? 'selected' : '' %>><%= s.name %>
-            </option>
-            <% }) %>
-    </select><br>
+<body>
+    <h1>Edit Assignment</h1>
+    
+    <form action="/assignment/edit/<%= assignment._id %>" method="POST">
+        <label>Title:</label>
+        <input type="text" name="title" value="<%= assignment.title %>" required><br>
+        <label>Description:</label>
+        <textarea name="description"><%= assignment.description %></textarea><br>
+        <label for="dueDate">Due Date and Time:</label><br />
+        <input type="datetime-local" name="dueDate" id="dueDate" required
+            min="<%= new Date().toISOString().slice(0, 16) %>"
+            value="<%= new Date(assignment.dueDate).toISOString().slice(0, 16) %>"
+            placeholder="<%= new Date(assignment.dueDate).toISOString().slice(11, 16) %>" /><br /><br />
 
-    <button type="submit">Update Assignment</button>
-</form>
-<a href="/auth/teacher_dashboard">Back to Dashboard</a>
+        <label>Subject:</label>
+        <select name="subject" required>
+            <% subjects.forEach(s=> { %>
+                <option value="<%= s._id %>" <%=assignment.subject.equals(s._id) ? 'selected' : '' %>><%= s.name %>
+                </option>
+                <% }) %>
+        </select><br>
+
+        <button type="submit">Update Assignment</button>
+        <a href="/auth/teacher_dashboard">Back to Dashboard</a>
+    </form>
+
+</body>
+
+</html>

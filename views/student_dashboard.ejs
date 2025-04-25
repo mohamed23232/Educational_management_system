@@ -9,18 +9,13 @@
 <body>
     <h1>Welcome <%= user.name%>!</h1>
 
-    <!-- Display options -->
-    <h2>What would you like to do?</h2>
     <ul>
-        <li><a href="/assignment/view">View Assignments</a></li> <!-- Link to view assignments -->
-        <li><a href="/subject/view">View Subjects</a></li>
-        <li>
-            <!-- Logout button -->
-            <form action="/auth/logout" method="GET">
-                <button type="submit">Logout</button>
-            </form>
-        </li>
+        <li><a href="/assignment/view" class='button'>View Assignments</a></li> <!-- Link to view assignments -->
+        <li><a href="/subject/view" class='button'>View Subjects</a></li>
     </ul>
+    <form action="/auth/logout" method="GET">
+        <button type="submit">Logout</button>
+    </form>
 </body>
 
 </html>
