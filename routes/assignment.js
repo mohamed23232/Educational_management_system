@@ -118,6 +118,21 @@ router.get('/view', async (req, res) => {
   }
 });
 
+router.get('/edit/:id', async (req, res) => {
+  if (req.session.user?.role !== 'teacher') return res.status(403).send('Access denied');
+
+  try {
+    const assignment = await Assignment.findById(req.params.id);
+    const subjects = await Subject.find({ teacher: req.session.user.id });
+
+    if (!assignment) return res.status(404).send('Assignment not found');
+
+    res.render('edit_assignment', { assignment, subjects });
+  } catch (err) {
+    console.error('Error loading edit page:', err);
+    res.status(500).send('Error loading edit page');
+  }
+});
 
 // Handle assignment update
 router.post('/edit/:id', async (req, res) => {

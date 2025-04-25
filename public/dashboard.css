@@ -1,0 +1,140 @@
+/* General Dashboard Styles */
+
+/* center the body in the middle of the page */
+html,
+body {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f7fc;
+    color: #333;
+    background-image: url('/images/classroom.jpg');
+
+    /* Add your image path here */
+    background-size: cover;
+    /* Ensure the image covers the entire background */
+    background-position: center;
+    /* Center the image */
+    background-repeat: no-repeat;
+    /* Prevent the image from repeating */
+}
+
+/* put h1 at the top of the page */
+h1 {
+    font-size: 36px;
+    margin: 0;
+    text-align: center;
+    color: white;
+    padding: 20px;
+    background-color: #3683e1;
+    width: 100%;
+    position: fixed;
+    /* Fix the h1 at the top */
+    top: 0;
+    /* Align it to the top of the screen */
+    z-index: 1000;
+    /* Ensure it stays above other elements */
+}
+
+h2 {
+    font-size: 24px;
+    color: #333;
+    margin-top: 80px;
+    /* Add margin to avoid overlap with the fixed h1 */
+    margin-bottom: 10px;
+}
+
+/* center the ul inside the div in the middle of the page */
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+}
+
+/* make the li elements inside the ul display as inline-blocks */
+li {
+    display: block;
+    padding: 10px 20px;
+    margin: 10px;
+    transition: transform 0.3s ease;
+}
+
+/* Style links to look like buttons */
+a.button {
+    display: inline-block;
+    font-size: 20px;
+    /* Increased font size */
+    padding: 12px 24px;
+    /* Increased padding */
+    background-color: #007BFF;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    margin: 0 auto;
+    transition: background-color 0.3s ease;
+}
+
+a.button:hover {
+    background-color: #0056b3;
+}
+
+button {
+    display: inline-block;
+    font-size: 20px;
+    /* Increased font size */
+    padding: 12px 24px;
+    /* Increased padding */
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 10px;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* center the form in the middle of the page */
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.top-button {
+    margin-bottom: 20px;
+}
+
+.top-button a {
+    margin-right: 10px;
+}
+
+/* General Button Styles */
+/* add a transition effect to the button when hovered */
+button {
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+button[type="submit"] {
+    background-color: #e74c3c;
+    border-radius: 5px;
+    color: white;
+}
+
+button[type="submit"]:hover {
+    background-color: #c0392b;
+}

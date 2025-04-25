@@ -3,17 +3,19 @@
 
 <head>
     <title>Teacher Dashboard</title>
+    <link rel="stylesheet" href="/dashboard.css"> <!-- Link to external CSS for styling -->
 </head>
 
 <body>
     <h1>Welcome, <%= user.name %> (Teacher)</h1>
 
-    <ul>
-        <li><a href="/assignment/create">Create Assignment</a></li>
-        <li><a href="/assignment/view">View Assignments</a></li>
-        <li><a href="/subject/view">View Subjects</a></li>
-    </ul>
-
+    <div>
+        <ul>
+            <li><a href="/assignment/create" class="button">Create Assignment</a></li>
+            <li><a href="/assignment/view" class="button">View Assignments</a></li>
+            <li><a href="/subject/view" class="button">View Subjects</a></li>
+        </ul>
+    </div>
     <form action="/auth/logout" method="GET">
         <button type="submit">Logout</button>
     </form>
