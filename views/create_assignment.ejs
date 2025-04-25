@@ -14,9 +14,9 @@
 
     <label for="description">Description:</label><br />
     <textarea name="description" id="description" rows="5" required></textarea><br /><br />
-
-    <label for="dueDate">Due Date:</label><br />
-    <input type="date" name="dueDate" id="dueDate" required /><br /><br />
+    <label for="dueDate">Due Date and Time:</label><br />
+    <input type="datetime-local" name="dueDate" id="dueDate" required 
+           min="<%= new Date().toISOString().slice(0, 16) %>" /><br /><br />
 
     <!--add the subject field-->
     <label for="subject">Subject:</label><br />

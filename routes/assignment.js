@@ -154,6 +154,7 @@ router.post('/delete/:id', async (req, res) => {
   }
 });
 
+
 // Route to show assignment details (for both teachers and students)
 router.get('/details/:id', async (req, res) => {
   try {
