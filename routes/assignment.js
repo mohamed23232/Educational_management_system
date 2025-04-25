@@ -44,9 +44,11 @@ router.post('/', async (req, res) => {
   }
 });
 
+// Route to view assignments (for both teachers and students)
 router.get('/view', async (req, res) => {
   try {
     const userId = req.session.user.id;
+    const currentDate = new Date(); // Get the current date
 
     if (req.session.user?.role === 'teacher') {
       // Teacher logic — unchanged
@@ -61,39 +63,51 @@ router.get('/view', async (req, res) => {
     }
 
     if (req.session.user?.role === 'student') {
-      // Student logic — enhanced
+      // Student logic — enhanced with date validation
       const subjects = await Subject.find({ students: userId }).select('_id');
       const subjectIds = subjects.map(subject => subject._id);
 
+      // Get all assignments for the student's subjects
       const allAssignments = await Assignment.find({ subject: { $in: subjectIds } }).populate('subject');
 
+      // Get the student's submissions for each assignment
       const submissions = await Submission.find({ student: userId })
         .populate({
           path: 'assignment',
           populate: { path: 'subject' }
         });
 
+      // Get the IDs of submitted assignments for easy lookup
       const submittedAssignmentIds = new Set(submissions.map(s => s.assignment?._id?.toString()));
 
+      // Separate assignments into pending, past due, and submitted
+      const pendingAssignments = [];
+      const pastDueAssignments = [];
       const submittedAssignments = [];
-      const notSubmittedAssignments = [];
 
-      // Loop through all assignments and categorize them
       allAssignments.forEach(assignment => {
+        const isDeadlinePassed = currentDate > new Date(assignment.dueDate);
+        
         if (submittedAssignmentIds.has(assignment._id.toString())) {
           const sub = submissions.find(s => s.assignment?._id?.toString() === assignment._id.toString());
           if (sub) {
-            submittedAssignments.push({ assignment, submission: sub });
+            submittedAssignments.push({ assignment, submission: sub, isDeadlinePassed });
           }
+        } else if (isDeadlinePassed) {
+          // Add to past due assignments if the deadline has passed
+          pastDueAssignments.push(assignment);
         } else {
-          notSubmittedAssignments.push(assignment);
+          // Add to pending assignments if the deadline is in the future
+          pendingAssignments.push(assignment);
         }
       });
 
+      // Render the view with the categorized assignments
       return res.render('view_assignment', {
         userRole: 'student',
         submittedAssignments,
-        notSubmittedAssignments
+        pendingAssignments,
+        pastDueAssignments
       });
     }
 
@@ -104,44 +118,6 @@ router.get('/view', async (req, res) => {
   }
 });
 
-
-// Route to show assignment details (for both teachers and students)
-router.get('/details/:id', async (req, res) => {
-  try {
-    const assignment = await Assignment.findById(req.params.id).populate('subject');
-    const userRole = req.session.user?.role;
-
-    if (!assignment) {
-      return res.status(404).send('Assignment not found');
-    }
-
-    res.render('assignment_details', {
-      assignment,
-      userRole,
-      userId: req.session.user?.id
-    });
-  } catch (err) {
-    console.error('Error fetching assignment details:', err);
-    res.status(500).send('Internal server error');
-  }
-});
-
-
-router.get('/edit/:id', async (req, res) => {
-  if (req.session.user?.role !== 'teacher') return res.status(403).send('Access denied');
-
-  try {
-    const assignment = await Assignment.findById(req.params.id);
-    const subjects = await Subject.find({ teacher: req.session.user.id });
-
-    if (!assignment) return res.status(404).send('Assignment not found');
-
-    res.render('edit_assignment', { assignment, subjects });
-  } catch (err) {
-    console.error('Error loading edit page:', err);
-    res.status(500).send('Error loading edit page');
-  }
-});
 
 // Handle assignment update
 router.post('/edit/:id', async (req, res) => {
@@ -175,6 +151,28 @@ router.post('/delete/:id', async (req, res) => {
   } catch (err) {
     console.error('Error deleting assignment:', err);
     res.status(500).send('Error deleting assignment');
+  }
+});
+
+
+// Route to show assignment details (for both teachers and students)
+router.get('/details/:id', async (req, res) => {
+  try {
+    const assignment = await Assignment.findById(req.params.id).populate('subject');
+    const userRole = req.session.user?.role;
+
+    if (!assignment) {
+      return res.status(404).send('Assignment not found');
+    }
+
+    res.render('assignment_details', {
+      assignment,
+      userRole,
+      userId: req.session.user?.id
+    });
+  } catch (err) {
+    console.error('Error fetching assignment details:', err);
+    res.status(500).send('Internal server error');
   }
 });
 
