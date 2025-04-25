@@ -1,27 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <title><%= assignment.title %> - Details</title>
+    <meta charset="UTF-8">
+    <title>
+        <%= assignment.title %> - Details
+    </title>
     <link rel="stylesheet" href="/assg_details.css">
-
 </head>
+
 <body>
-  <div class="back-button">
-    <a href="/assignment/view">← Back to Assignments</a>
-  </div>
+    <div class="back-button">
+        <a href="/assignment/view">← Back to Assignments</a>
+    </div>
 
-  <h1><%= assignment.title %></h1>
-  <p><strong>Description:</strong> <%= assignment.description %></p>
-  <p><strong>Due Date:</strong> <%= assignment.dueDate.toDateString() %></p>
+    <h1>
+        <%= assignment.title %>
+    </h1>
+    <p><strong>Description:</strong>
+        <%= assignment.description %>
+    </p>
+    <p><strong>Due Date:</strong>
+        <%= new Date(assignment.dueDate).toLocaleString('en-US', { weekday: 'short' , year: 'numeric' , month: 'short' ,
+            day: 'numeric' , hour: '2-digit' , minute: '2-digit' , second: '2-digit' , hour12: true }) %>
+    </p>
 
-  <% if (userRole === 'student') { %>
-    <hr>
-    <form action="/submission/<%= assignment._id %>" method="POST" onsubmit="return confirm('Are you sure you want to submit this assignment?');">
-      <label for="content"><strong>Your Submission:</strong></label><br>
-      <textarea name="content" required placeholder="Type your answer here..."></textarea><br>
-      <button type="submit">Submit Assignment</button>
-    </form>
-  <% } %>
+    <% if (userRole==='student' ) { %>
+        <hr>
+        <form action="/submission/<%= assignment._id %>" method="POST"
+            onsubmit="return confirm('Are you sure you want to submit this assignment?');">
+            <label for="content"><strong>Your Submission:</strong></label><br>
+            <textarea name="content" required placeholder="Type your answer here..."></textarea><br>
+            <button type="submit">Submit Assignment</button>
+        </form>
+        <% } %>
 </body>
+
 </html>

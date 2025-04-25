@@ -6,9 +6,9 @@
     <label>Description:</label>
     <textarea name="description"><%= assignment.description %></textarea><br>
 
-    <label>Due Date:</label>
-    <input type="date" name="dueDate" value="<%= assignment.dueDate.toISOString().split('T')[0] %>" required><br>
-
+    <label for="dueDate">Due Date and Time:</label><br />
+    <input type="datetime-local" name="dueDate" id="dueDate" required
+        min="<%= new Date().toISOString().slice(0, 16) %>" /><br /><br />
     <label>Subject:</label>
     <select name="subject" required>
         <% subjects.forEach(s=> { %>

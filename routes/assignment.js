@@ -178,18 +178,6 @@ router.post('/delete/:id', async (req, res) => {
   }
 });
 
-// view assignment details
-router.get('/details/:id', async (req, res) => {
-  try {
-    const assignment = await Assignment.findById(req.params.id).populate('subject');
-    if (!assignment) return res.status(404).send('Assignment not found');
-    res.render('assignment_details', { assignment });
-  } catch (err) {
-    console.error('Error fetching assignment details:', err);
-    res.status(500).send('Error fetching assignment details');
-  }
-});
-
 router.get('/view_submission/:assignmentId', async (req, res) => {
   if (req.session.user?.role !== 'teacher') return res.status(403).send('Access denied');
 
