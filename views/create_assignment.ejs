@@ -3,6 +3,7 @@
 
 <head>
   <title>Create Assignment</title>
+  <link rel="stylesheet" href="/create_assignment.css"> <!-- Link to external CSS for styling -->
 </head>
 
 <body>
@@ -15,8 +16,8 @@
     <label for="description">Description:</label><br />
     <textarea name="description" id="description" rows="5" required></textarea><br /><br />
     <label for="dueDate">Due Date and Time:</label><br />
-    <input type="datetime-local" name="dueDate" id="dueDate" required 
-           min="<%= new Date().toISOString().slice(0, 16) %>" /><br /><br />
+    <input type="datetime-local" name="dueDate" id="dueDate" required
+      min="<%= new Date().toISOString().slice(0, 16) %>" /><br /><br />
 
     <!--add the subject field-->
     <label for="subject">Subject:</label><br />
@@ -37,10 +38,8 @@
         <% }) %>
     </select><br /><br /> -->
 
-    <a href="/auth/teacher_dashboard">Back to Dashboard</a>
-
-
     <button type="submit">Create Assignment</button>
+    <a href="/auth/teacher_dashboard" class="button">Back to Dashboard</a>
   </form>
 
 </body>

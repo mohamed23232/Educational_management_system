@@ -1,34 +1,65 @@
-<!-- Submitted Assignments -->
-        <h2>Submitted Assignments</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Title</th>
-                    <th>Subject</th>
-                    <th>Submission Date</th>
-                    <th>Grade</th>
-                    <th>Feedback</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% submittedAssignments.forEach(({ assignment, submission }) => { %>
-                    <tr>
-                        <td><%= assignment.title %></td>
-                        <td><%= assignment.subject.name %></td>
-                        <td>
-                            <%= submission.submissionDate ? new Date(submission.submissionDate).toLocaleDateString('en-US', {
-                                year: 'numeric', month: 'short', day: 'numeric',
-                                hour: '2-digit', minute: '2-digit'
-                            }) : 'Not Submitted' %>
-                        </td>
-                        <td><%= submission.grade !== null ? submission.grade : 'Not Graded' %></td>
-                        <td><%= submission.feedback || 'No Feedback' %></td>
-                    </tr>
-                <% }) %>
-            </tbody>
-        </table>
+<!DOCTYPE html>
+<html>
 
-    <% } %>
+<head>
+    <title>View Submissions</title>
+    <link rel="stylesheet" href="/view_submission.css"> <!-- Link to external CSS for styling -->
+</head>
+
+<body>
+    <h1>Submissions for <%= submissions[0]?.assignment.title || 'Assignment' %>
+    </h1>
+
+    <% if (submissions.length===0) { %>
+        <p>No submissions yet.</p>
+        <% } else { %>
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Student</th>
+                        <th>Submitted</th>
+                        <th>Submission Date</th>
+                        <th>Grade</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% submissions.forEach(s=> { %>
+                        <tr>
+                            <td>
+                                <%= s.student.username %>
+                            </td>
+                            <td>
+                                <%= s.submitted ? 'Yes' : 'No' %>
+                            </td>
+                            <td>
+                                <%= s.submissionDate ? s.submissionDate.toLocaleString() : 'N/A' %>
+                            </td>
+
+                            <td>
+                                <%= s.grade !==undefined && s.grade !==null ? s.grade : 'Not graded' %>
+                            </td>
+                            <td>
+                                <a href="/assignment/grade/<%= s._id %>">
+                                    <button>
+                                        <%= s.grade !==undefined && s.grade !==null ? 'Edit Grade' : 'Grade' %>
+                                    </button>
+                                </a>
+                            </td>
+                        </tr>
+                        <% }) %>
+                </tbody>
+            </table>
+            <% } %>
+
+                <br>
+                <!-- ...existing code... -->
+                <div class="button-container">
+                    <a href="/assignment/view">
+                        <button>Back to Assignment</button>
+                    </a>
+                </div>
+                <!-- ...existing code... -->
 </body>
 
 </html>

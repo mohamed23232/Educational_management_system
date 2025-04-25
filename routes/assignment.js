@@ -87,7 +87,7 @@ router.get('/view', async (req, res) => {
 
       allAssignments.forEach(assignment => {
         const isDeadlinePassed = currentDate > new Date(assignment.dueDate);
-        
+
         if (submittedAssignmentIds.has(assignment._id.toString())) {
           const sub = submissions.find(s => s.assignment?._id?.toString() === assignment._id.toString());
           if (sub) {
@@ -190,6 +190,7 @@ router.get('/details/:id', async (req, res) => {
     res.status(500).send('Internal server error');
   }
 });
+
 
 router.get('/view_submission/:assignmentId', async (req, res) => {
   if (req.session.user?.role !== 'teacher') return res.status(403).send('Access denied');
