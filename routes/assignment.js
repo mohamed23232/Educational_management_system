@@ -8,7 +8,8 @@ router.get('/create', async (req, res) => {
   if (req.session.user?.role !== 'teacher') return res.status(403).send('Access denied');
 
   try {
-    const subjects = await Subject.find();
+    const teacherId = req.session.user.id; // Get teacher ID from session
+    const subjects = await Subject.find({ teacher: teacherId }); // Fetch only assigned subjects
     res.render('create_assignment', { subjects });
     console.log('Create assignment page rendered');
   } catch (err) {
@@ -59,13 +60,77 @@ router.get('/view', async (req, res) => {
     console.log('Assignments fetched:', assignments);
 
     console.log('Assignments fetched:', assignments);
-    if (req.session.user?.role == 'teacher')res.render('view_assignment', { assignments, userRole: 'teacher' });
-    if (req.session.user?.role == 'student')res.render('view_assignment', { assignments, userRole: 'student' });
+    if (req.session.user?.role == 'teacher') res.render('view_assignment', { assignments, userRole: 'teacher' });
+    if (req.session.user?.role == 'student') res.render('view_assignment', { assignments, userRole: 'student' });
   } catch (err) {
     console.error('Error fetching assignments:', err);
     res.status(500).send('Error fetching assignments');
   }
 });
+
+router.get('/edit/:id', async (req, res) => {
+  if (req.session.user?.role !== 'teacher') return res.status(403).send('Access denied');
+
+  try {
+    const assignment = await Assignment.findById(req.params.id);
+    const subjects = await Subject.find({ teacher: req.session.user.id });
+
+    if (!assignment) return res.status(404).send('Assignment not found');
+
+    res.render('edit_assignment', { assignment, subjects });
+  } catch (err) {
+    console.error('Error loading edit page:', err);
+    res.status(500).send('Error loading edit page');
+  }
+});
+
+// Handle assignment update
+router.post('/edit/:id', async (req, res) => {
+  try {
+    const { title, description, dueDate, subject } = req.body;
+
+    if (!title || !dueDate || !subject) {
+      return res.status(400).send('Missing required fields');
+    }
+
+    await Assignment.findByIdAndUpdate(req.params.id, {
+      title,
+      description,
+      dueDate: new Date(dueDate),
+      subject
+    });
+
+    res.redirect('/assignment/view');
+  } catch (err) {
+    console.error('Error updating assignment:', err);
+    res.status(500).send('Error updating assignment');
+  }
+});
+
+router.post('/delete/:id', async (req, res) => {
+  if (req.session.user?.role !== 'teacher') return res.status(403).send('Access denied');
+
+  try {
+    await Assignment.findByIdAndDelete(req.params.id);
+    res.redirect('/assignment/view');
+  } catch (err) {
+    console.error('Error deleting assignment:', err);
+    res.status(500).send('Error deleting assignment');
+  }
+});
+
+// view assignment details
+router.get('/details/:id', async (req, res) => {
+  try {
+    const assignment = await Assignment.findById(req.params.id).populate('subject');
+    if (!assignment) return res.status(404).send('Assignment not found');
+    res.render('assignment_details', { assignment });
+  } catch (err) {
+    console.error('Error fetching assignment details:', err);
+    res.status(500).send('Error fetching assignment details');
+  }
+});
+
 
 
 module.exports = router;
