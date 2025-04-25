@@ -64,7 +64,7 @@ router.post('/:assignmentId', async (req, res) => {
         console.log('Assignment submitted successfully:', submission._id);
 
         // Redirect after submission
-        res.redirect('/auth/student_dashboard');
+        res.redirect('/assignment/view');
     } catch (err) {
         console.error('Error submitting assignment:', err);
         res.status(500).send('Internal Server Error');
