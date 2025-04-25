@@ -56,48 +56,58 @@
         form {
             display: inline;
         }
+
+        .top-button {
+            margin-bottom: 20px;
+        }
+
     </style>
 </head>
 
 <body>
     <h1>Assignments</h1>
 
+
+    <div class="top-button">
+        <a href="/auth/<%= userRole %>_dashboard" class="button">Back to Dashboard</a>
+    </div>
+
     <table>
         <thead>
             <tr>
                 <th>Title</th>
                 <th>Subject</th>
-                <% if (userRole==='teacher' ) { %>
+                <% if (userRole === 'teacher') { %>
                     <th>Actions</th>
-                    <% } %>
+                <% } else if (userRole === 'student') { %>
+                    <th>Submit</th>
+                <% } %>
             </tr>
         </thead>
         <tbody>
-            <a href="/auth/teacher_dashboard" class="button">Back to Dashboard</a>
-            <% assignments.forEach(a=> { %>
+            <% assignments.forEach(a => { %>
                 <tr>
-                    <td>
-                        <%= a.title %>
-                    </td>
-                    <td>
-                        <%= a.subject.name %>
-                    </td>
+                    <td><%= a.title %></td>
+                    <td><%= a.subject.name %></td>
 
-                    <% if (userRole==='teacher' ) { %>
+                    <% if (userRole === 'teacher') { %>
                         <td>
                             <a href="/assignment/edit/<%= a._id %>" class="button">Edit</a>
-                            <a href="/assignment/details/<%= a._id %>" class="button">view_details</a>
-                            <a href="/assignment/view_submission/<%= a._id %>" class="button">View_submission</a>
+                            <a href="/assignment/details/<%= a._id %>" class="button">View Details</a>
+                            <a href="/assignment/view_submission/<%= a._id %>" class="button">View Submissions</a>
+
                             <form action="/assignment/delete/<%= a._id %>" method="POST"
                                 onsubmit="return confirm('Are you sure you want to delete this assignment?');">
                                 <button type="submit">Delete</button>
                             </form>
                         </td>
-                        <% } %>
-                        
+                    <% } else if (userRole === 'student') { %>
+                        <td>
+                            <a href="/assignment/details/<%= a._id %>" class="button">View & Submit</a>
+                        </td>
+                    <% } %>
                 </tr>
-                <% }) %>
-
+            <% }) %>
         </tbody>
     </table>
 
