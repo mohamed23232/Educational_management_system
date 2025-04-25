@@ -8,7 +8,7 @@ router.get('/create', async (req, res) => {
   if (req.session.user?.role !== 'teacher') return res.status(403).send('Access denied');
 
   try {
-    const subjects = await Subject.find();
+    const subjects = await Subject.find();  //fix ya rabea
     res.render('create_assignment', { subjects });
     console.log('Create assignment page rendered');
   } catch (err) {

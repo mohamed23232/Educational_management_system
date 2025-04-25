@@ -38,7 +38,7 @@ app.use(session({
 // Routes
 // app.use('/teacher', teacherRoutes);
 // app.use('/student', studentRoutes);
-// app.use('/subject', subjectRoutes);
+app.use('/subject', subjectRoutes);
 app.use('/assignment', assignmentRoutes);
 //app.use('/submission', submissionRoutes);
 app.use('/auth', authRoutes); // <-- Auth routes (login/register/dashboard/etc.)

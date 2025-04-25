@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Create Subject</title>
+</head>
+
+<body>
+  <h1>Create a New Subject</h1>
+
+  <form action="/subject" method="POST">
+    <label for="title">subject name:</label><br />
+    <input type="text" name="title" id="title" required /><br /><br />
+
+    <label for="description">Description:</label><br />
+    <textarea name="description" id="description" rows="5" required></textarea><br /><br />
+
+    <!--add the subject field-->
+    
+    <label for="teacher">Teacher:</label><br />
+    <select name="teacher" id="teacher" required>
+      <% teachers.forEach(teacher=> { %>
+        <option value="<%= teacher._id %>">
+          <%= teacher.username %>
+        </option>
+        <% }) %>
+    </select>
+
+    <br></br>
+    <label for="students">Students:</label><br />
+    <select name="students" id="students" required>
+      <% students.forEach(student=> { %>
+        <option value="<%= student._id %>">
+          <%= student.username %>
+        </option>
+        <% }) %>
+    </select>
+    <br></br>
+
+
+
+    <button type="submit">Create Assignment</button>
+  </form>
+
+</body>
+
+</html>
