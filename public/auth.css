@@ -1,0 +1,72 @@
+/* Basic styling for body */
+body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column; /* Stack title and form vertically */
+  }
+  
+  /* Title at the top */
+  h2 {
+      color: #333;
+      margin-bottom: 30px; /* Space between title and form */
+      text-align: center;  /* Center-align the title */
+      font-size: 2em;      /* Increase font size for title */
+  }
+  
+  /* Container for the form */
+  form {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 300px;
+      margin-left: 20px; /* Left margin */
+      margin-right: 20px;   /* Right margin */
+  }
+  
+  /* Input and button styling */
+  input,
+  select,
+  button {
+      padding: 10px;
+      margin: 10px auto; /* Auto margins will center the button */
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 16px;
+      display: block; /* Makes the button a block-level element so it can be centered */
+      width: 90%; /* Ensures the button only takes up as much space as necessary */
+  }
+  
+  /* Button specific styles */
+  button {
+      background-color: #4CAF50;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+      background-color: #45a049;
+  }
+  
+  /* Link styling for "Register here" and other text */
+  p {
+      font-size: 14px;
+      text-align: center; /* Center the link */
+  }
+  
+  a {
+      color: #4CAF50;
+      text-decoration: none;
+  }
+  
+  a:hover {
+      text-decoration: underline;
+  }
+  
