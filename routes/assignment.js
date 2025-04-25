@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Assignment = require('../models/assignment');
 const Subject = require('../models/subject');
+const Submission = require('../models/submission');
 
 // Render create assignment form
 router.get('/create', async (req, res) => {
@@ -43,38 +44,67 @@ router.post('/', async (req, res) => {
   }
 });
 
-// ✅ New route: View all assignments for teachers and students
 router.get('/view', async (req, res) => {
-
   try {
     const userId = req.session.user.id;
-    let assignments;
 
     if (req.session.user?.role === 'teacher') {
-      // Step 1: Get the subjects the teacher teaches
+      // Teacher logic — unchanged
       const subjects = await Subject.find({ teacher: userId }).select('_id');
       const subjectIds = subjects.map(subject => subject._id);
+      const assignments = await Assignment.find({ subject: { $in: subjectIds } }).populate('subject');
 
-      // Step 2: Get assignments linked to those subjects
-      assignments = await Assignment.find({ subject: { $in: subjectIds } }).populate('subject');
-    } else if (req.session.user?.role === 'student') {
-      // Step 1: Get the subjects the student is enrolled in
+      return res.render('view_assignment', {
+        assignments,
+        userRole: 'teacher'
+      });
+    }
+
+    if (req.session.user?.role === 'student') {
+      // Student logic — enhanced
       const subjects = await Subject.find({ students: userId }).select('_id');
       const subjectIds = subjects.map(subject => subject._id);
 
-      // Step 2: Get assignments linked to those subjects
-      assignments = await Assignment.find({ subject: { $in: subjectIds } }).populate('subject');
+      const allAssignments = await Assignment.find({ subject: { $in: subjectIds } }).populate('subject');
+
+      const submissions = await Submission.find({ student: userId })
+        .populate({
+          path: 'assignment',
+          populate: { path: 'subject' }
+        });
+
+      const submittedAssignmentIds = new Set(submissions.map(s => s.assignment?._id?.toString()));
+
+      const submittedAssignments = [];
+      const notSubmittedAssignments = [];
+
+      // Loop through all assignments and categorize them
+      allAssignments.forEach(assignment => {
+        if (submittedAssignmentIds.has(assignment._id.toString())) {
+          const sub = submissions.find(s => s.assignment?._id?.toString() === assignment._id.toString());
+          if (sub) {
+            submittedAssignments.push({ assignment, submission: sub });
+          }
+        } else {
+          notSubmittedAssignments.push(assignment);
+        }
+      });
+
+      return res.render('view_assignment', {
+        userRole: 'student',
+        submittedAssignments,
+        notSubmittedAssignments
+      });
     }
 
-    console.log('Assignments fetched:', assignments);
-    // Render assignments based on the role
-    res.render('view_assignment', { assignments, userRole: req.session.user.role });
-
+    res.status(403).send('Unauthorized role');
   } catch (err) {
     console.error('Error fetching assignments:', err);
     res.status(500).send('Error fetching assignments');
   }
 });
+
+
 // Route to show assignment details (for both teachers and students)
 router.get('/details/:id', async (req, res) => {
   try {
