@@ -16,7 +16,7 @@
 
     <form method="POST" action="/assignment/grade/<%= submission._id %>">
         <label for="grade">Grade:</label><br>
-        <input type="number" id="grade" name="grade" required value="<%= submission.grade || '' %>"><br><br>
+        <input type="text" id="grade" name="grade" required value="<%= submission.grade || '' %>"><br><br>
 
         <label for="feedback">Feedback:</label><br>
         <textarea id="feedback" name="feedback" rows="4" cols="50"

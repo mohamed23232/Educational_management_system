@@ -6,7 +6,7 @@ const submissionSchema = new mongoose.Schema({
   student: { type: mongoose.Schema.Types.ObjectId, ref: 'Student', required: true },
   submitted: { type: Boolean, default: false },
   submissionDate: { type: Date, default: null },
-  grade: { type: Number, default: null },
+  grade: { type: String, default: null },
   feedback: { type: String, default: null },
   content: { type: String, required: true },
 });
