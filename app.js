@@ -13,6 +13,7 @@ const submissionRoutes = require('./routes/submission');
 const authRoutes = require('./routes/auth'); // <-- Add auth routes
 
 const app = express();
+app.use(express.static('public'));
 
 // Middleware
 app.use(express.json());
