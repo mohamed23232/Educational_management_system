@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Admin Dashboard</title>
 </head>
+
 <body>
     <h1>Welcome, <%= user.name %> (Admin)</h1>
 
@@ -13,5 +15,10 @@
         <li><a href="/subject/view">View Subjects</a></li>
     </ul>
 
+    <form action="/auth/logout" method="GET">
+        <button type="submit">Logout</button>
+    </form>
+
 </body>
+
 </html>
