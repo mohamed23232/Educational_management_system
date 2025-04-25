@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Students in <%= subject.name %></title>
+    <link rel="stylesheet" href="/public/students.css">
+</head>
+<body>
+
+    <h1>Students enrolled in "<%= subject.name %>"</h1>
+
+    <% if (subject.students.length > 0) { %>
+        <ul>
+            <% subject.students.forEach(student => { %>
+                <li><strong><%= student.username %></strong></li>
+            <% }) %>
+        </ul>
+    <% } else { %>
+        <p>No students enrolled in this subject.</p>
+    <% } %>
+
+    <a href="/subject/view" class="back-button">← Back subjects</a>
+
+</body>
+</html>

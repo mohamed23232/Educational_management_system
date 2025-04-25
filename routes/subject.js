@@ -63,4 +63,69 @@ router.get('/view', async (req, res) => {
 });
 
 
+// view assignment details
+router.get('/details/:id', async (req, res) => {
+  try {
+    const subject = await Subject.findById(req.params.id).populate('students', 'username');
+    if (!subject) return res.status(404).send('Subject not found');
+
+    res.render('students_list', { subject });
+  } catch (err) {
+    console.error('Error fetching assignment details:', err);
+    res.status(500).send('Error fetching assignment details');
+  }
+});
+
+
+// router.get('/edit/:id', async (req, res) => {
+//   if (req.session.user?.role !== 'teacher') return res.status(403).send('Access denied');
+
+//   try {
+//     const assignment = await Assignment.findById(req.params.id);
+//     const subjects = await Subject.find({ teacher: req.session.user.id });
+
+//     if (!assignment) return res.status(404).send('Assignment not found');
+
+//     res.render('edit_assignment', { assignment, subjects });
+//   } catch (err) {
+//     console.error('Error loading edit page:', err);
+//     res.status(500).send('Error loading edit page');
+//   }
+// });
+
+// // Handle assignment update
+// router.post('/edit/:id', async (req, res) => {
+//   try {
+//     const { title, description, dueDate, subject } = req.body;
+
+//     if (!title || !dueDate || !subject) {
+//       return res.status(400).send('Missing required fields');
+//     }
+
+//     await Assignment.findByIdAndUpdate(req.params.id, {
+//       title,
+//       description,
+//       dueDate: new Date(dueDate),
+//       subject
+//     });
+
+//     res.redirect('/assignment/view');
+//   } catch (err) {
+//     console.error('Error updating assignment:', err);
+//     res.status(500).send('Error updating assignment');
+//   }
+// });
+
+// router.post('/delete/:id', async (req, res) => {
+//   if (req.session.user?.role !== 'teacher') return res.status(403).send('Access denied');
+
+//   try {
+//     await Assignment.findByIdAndDelete(req.params.id);
+//     res.redirect('/assignment/view');
+//   } catch (err) {
+//     console.error('Error deleting assignment:', err);
+//     res.status(500).send('Error deleting assignment');
+//   }
+// });
+
 module.exports = router;

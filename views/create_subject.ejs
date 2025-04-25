@@ -1,47 +1,40 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+  <meta charset="UTF-8">
   <title>Create Subject</title>
+  <link rel="stylesheet" href="/css/form.css">
 </head>
 
 <body>
-  <h1>Create a New Subject</h1>
+  <div class="container">
+    <h1>Create a New Subject</h1>
 
-  <form action="/subject" method="POST">
-    <label for="title">subject name:</label><br />
-    <input type="text" name="title" id="title" required /><br /><br />
+    <form action="/subject" method="POST">
+      <label for="title">Subject Name:</label>
+      <input type="text" name="title" id="title" required />
 
-    <label for="description">Description:</label><br />
-    <textarea name="description" id="description" rows="5" required></textarea><br /><br />
+      <label for="description">Description:</label>
+      <textarea name="description" id="description" rows="4" required></textarea>
 
-    <!--add the subject field-->
-    
-    <label for="teacher">Teacher:</label><br />
-    <select name="teacher" id="teacher" required>
-      <% teachers.forEach(teacher=> { %>
-        <option value="<%= teacher._id %>">
-          <%= teacher.username %>
-        </option>
+      <label for="teacher">Teacher:</label>
+      <select name="teacher" id="teacher" required>
+        <% teachers.forEach(teacher => { %>
+          <option value="<%= teacher._id %>"><%= teacher.username %></option>
         <% }) %>
-    </select>
+      </select>
 
-    <br></br>
-    <label for="students">Students:</label><br />
-    <select name="students" id="students" required>
-      <% students.forEach(student=> { %>
-        <option value="<%= student._id %>">
-          <%= student.username %>
-        </option>
+      <label for="students">Students:</label>
+      <select name="students" id="students" multiple required>
+        <% students.forEach(student => { %>
+          <option value="<%= student._id %>"><%= student.username %></option>
         <% }) %>
-    </select>
-    <br></br>
+      </select>
 
-
-
-    <button type="submit">Create Assignment</button>
-  </form>
-
+      <button type="submit">Create Subject</button>
+    </form>
+  </div>
 </body>
 
 </html>
