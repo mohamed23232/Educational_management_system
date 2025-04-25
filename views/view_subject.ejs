@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Subject</title>
+</head>
+
+<body>
+    <h1>Subject</h1>
+
+    <ul>
+        <% subjects.forEach(subject => { %>
+            <li>
+                <strong><%= subject.name %></strong><br>
+                <em>Description:</em> <%= subject.description %><br>
+                <em>Teacher:</em> <%= subject.teacher?.username || 'No teacher assigned' %><br>
+                <a href="/subject/edit/<%= subject._id %>">Edit</a> |
+                <a href="/subject/delete/<%= subject._id %>">Delete</a>
+            </li>
+            <hr>
+        <% }) %>
+    </ul>
+     <a href="/subject/create">+ Create New Subject</a><br>
+
+    <a href="/auth/admin_dashboard">Back to Dashboard</a>
+
+</body>
+
+</html>
