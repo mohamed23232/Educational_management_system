@@ -1,0 +1,22 @@
+<h2>Edit Assignment</h2>
+<form action="/assignment/edit/<%= assignment._id %>" method="POST">
+    <label>Title:</label>
+    <input type="text" name="title" value="<%= assignment.title %>" required><br>
+
+    <label>Description:</label>
+    <textarea name="description"><%= assignment.description %></textarea><br>
+
+    <label>Due Date:</label>
+    <input type="date" name="dueDate" value="<%= assignment.dueDate.toISOString().split('T')[0] %>" required><br>
+
+    <label>Subject:</label>
+    <select name="subject" required>
+        <% subjects.forEach(s=> { %>
+            <option value="<%= s._id %>" <%=assignment.subject.equals(s._id) ? 'selected' : '' %>><%= s.name %>
+            </option>
+            <% }) %>
+    </select><br>
+
+    <button type="submit">Update Assignment</button>
+</form>
+<a href="/auth/teacher_dashboard">Back to Dashboard</a>

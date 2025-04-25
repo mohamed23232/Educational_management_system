@@ -60,11 +60,13 @@
         .top-button {
             margin-bottom: 20px;
         }
+
     </style>
 </head>
 
 <body>
     <h1>Assignments</h1>
+
 
     <div class="top-button">
         <a href="/auth/<%= userRole %>_dashboard" class="button">Back to Dashboard</a>
@@ -93,6 +95,7 @@
                             <a href="/assignment/edit/<%= a._id %>" class="button">Edit</a>
                             <a href="/assignment/details/<%= a._id %>" class="button">View Details</a>
                             <a href="/assignment/view_submission/<%= a._id %>" class="button">View Submissions</a>
+
                             <form action="/assignment/delete/<%= a._id %>" method="POST"
                                 onsubmit="return confirm('Are you sure you want to delete this assignment?');">
                                 <button type="submit">Delete</button>
@@ -107,6 +110,7 @@
             <% }) %>
         </tbody>
     </table>
+
 </body>
 
 </html>
