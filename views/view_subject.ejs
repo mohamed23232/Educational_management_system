@@ -3,26 +3,47 @@
 
 <head>
     <title>Subject</title>
+    <link rel="stylesheet" href="/view_assg.css">
+
 </head>
 
 <body>
     <h1>Subject</h1>
+    <div class="top-button">
+        <a href="/auth/admin_dashboard" class="button">Back to Dashboard</a>
+    </div>
 
-    <ul>
-        <% subjects.forEach(subject => { %>
-            <li>
-                <strong><%= subject.name %></strong><br>
-                <em>Description:</em> <%= subject.description %><br>
-                <em>Teacher:</em> <%= subject.teacher?.username || 'No teacher assigned' %><br>
-                <a href="/subject/edit/<%= subject._id %>">Edit</a> |
-                <a href="/subject/delete/<%= subject._id %>">Delete</a>
-            </li>
-            <hr>
-        <% }) %>
-    </ul>
-     <a href="/subject/create">+ Create New Subject</a><br>
 
-    <a href="/auth/admin_dashboard">Back to Dashboard</a>
+    <table>
+        <thead>
+            <tr>
+                <th>Subject</th>
+                <th>Teacher</th>
+                <th>Description</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% subjects.forEach(subject => { %>
+                <tr>
+                    <td><%= subject.name %></td>
+                    <td><%=subject.teacher?.username%></td>
+                    <td><%=subject.description%></td>
+                    <td>
+                        <a href="/subject/edit/<%= subject._id %>" class="button">Edit</a> 
+                        <a href="/subject/details/<%= subject._id %>" class="button">View Students</a>
+                        <form action="/subject/delete/<%= subject._id %>" method="POST"
+                            onsubmit="return confirm('Are you sure you want to delete this subject?');">
+                            <button type="submit">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+<br>
+<a href="/subject/create" class="button">+ Create New Subject</a><br><br>
+<a href="/auth/admin_dashboard" class="button">Back to Dashboard</a>
 
 </body>
 
