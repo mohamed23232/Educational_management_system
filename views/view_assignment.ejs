@@ -20,8 +20,7 @@
             margin-top: 30px;
         }
 
-        th,
-        td {
+        th, td {
             padding: 12px 15px;
             border: 1px solid #ccc;
             text-align: left;
@@ -60,12 +59,15 @@
         .top-button {
             margin-bottom: 20px;
         }
+
+        h2 {
+            margin-top: 50px;
+        }
     </style>
 </head>
 
 <body>
     <h1>Assignments</h1>
-
 
     <div class="top-button">
         <a href="/auth/<%= userRole %>_dashboard" class="button">Back to Dashboard</a>
@@ -94,26 +96,77 @@
                     </td>
 
                     <% if (userRole==='teacher' ) { %>
+
                         <td>
                             <a href="/assignment/edit/<%= a._id %>" class="button">Edit</a>
                             <a href="/assignment/details/<%= a._id %>" class="button">View Details</a>
                             <a href="/assignment/view_submission/<%= a._id %>" class="button">View Submissions</a>
-
                             <form action="/assignment/delete/<%= a._id %>" method="POST"
                                 onsubmit="return confirm('Are you sure you want to delete this assignment?');">
                                 <button type="submit">Delete</button>
                             </form>
                         </td>
-                        <% } else if (userRole==='student' ) { %>
-                            <td>
-                                <a href="/assignment/details/<%= a._id %>" class="button">View & Submit</a>
-                            </td>
-                            <% } %>
-                </tr>
-                <% }) %>
-        </tbody>
-    </table>
 
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+
+    <% } else if (userRole === 'student') { %>
+
+        <!-- Pending Assignments -->
+        <h2>Pending Assignments</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Subject</th>
+                    <th>Submit</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% notSubmittedAssignments.forEach(a => { %>
+                    <tr>
+                        <td><%= a.title %></td>
+                        <td><%= a.subject.name %></td>
+                        <td>
+                            <a href="/assignment/details/<%= a._id %>" class="button">View & Submit</a>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+
+        <!-- Submitted Assignments -->
+        <h2>Submitted Assignments</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Subject</th>
+                    <th>Submission Date</th>
+                    <th>Grade</th>
+                    <th>Feedback</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% submittedAssignments.forEach(({ assignment, submission }) => { %>
+                    <tr>
+                        <td><%= assignment.title %></td>
+                        <td><%= assignment.subject.name %></td>
+                        <td>
+                            <%= submission.submissionDate ? new Date(submission.submissionDate).toLocaleDateString('en-US', {
+                                year: 'numeric', month: 'short', day: 'numeric',
+                                hour: '2-digit', minute: '2-digit'
+                            }) : 'Not Submitted' %>
+                        </td>
+                        <td><%= submission.grade !== null ? submission.grade : 'Not Graded' %></td>
+                        <td><%= submission.feedback || 'No Feedback' %></td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    <% } %>
 </body>
 
 </html>

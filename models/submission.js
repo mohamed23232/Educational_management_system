@@ -8,7 +8,7 @@ const submissionSchema = new mongoose.Schema({
   submissionDate: { type: Date, default: null },
   grade: { type: String, default: null },
   feedback: { type: String, default: null },
-  content: { type: String, required: true },
+  content: { type: String,required: true},
 });
 
 module.exports = mongoose.model('Submission', submissionSchema);
