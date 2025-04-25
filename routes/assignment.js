@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Assignment = require('../models/assignment');
 const Subject = require('../models/subject');
+const Submission = require('../models/submission');
 
 // Render create assignment form
 router.get('/create', async (req, res) => {
@@ -159,6 +160,49 @@ router.get('/details/:id', async (req, res) => {
     res.status(500).send('Error fetching assignment details');
   }
 });
+
+router.get('/view_submission/:assignmentId', async (req, res) => {
+  if (req.session.user?.role !== 'teacher') return res.status(403).send('Access denied');
+
+  try {
+    const assignmentId = req.params.assignmentId;
+    const submissions = await Submission.find({ assignment: assignmentId })
+      .populate('student')
+      .populate('assignment');
+
+    res.render('view_submissions', { submissions });
+  } catch (err) {
+    console.error('Error fetching submissions:', err);
+    res.status(500).send('Error fetching submissions');
+  }
+});
+
+// GET page to grade a specific submission
+router.get('/grade/:id', async (req, res) => {
+  try {
+    const submission = await Submission.findById(req.params.id).populate('student');
+    res.render('grade_submission', { submission });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Failed to load submission.');
+  }
+});
+
+// POST to submit the grade and feedback
+router.post('/grade/:id', async (req, res) => {
+  try {
+    const { grade, feedback } = req.body;
+    await Submission.findByIdAndUpdate(req.params.id, {
+      grade,
+      feedback
+    });
+    res.redirect('/assignment/view');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Failed to submit grade.');
+  }
+});
+
 
 
 

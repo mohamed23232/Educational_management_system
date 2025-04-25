@@ -60,7 +60,6 @@
         .top-button {
             margin-bottom: 20px;
         }
-
     </style>
 </head>
 
@@ -77,20 +76,24 @@
             <tr>
                 <th>Title</th>
                 <th>Subject</th>
-                <% if (userRole === 'teacher') { %>
+                <% if (userRole==='teacher' ) { %>
                     <th>Actions</th>
-                <% } else if (userRole === 'student') { %>
-                    <th>Submit</th>
-                <% } %>
+                    <% } else if (userRole==='student' ) { %>
+                        <th>Submit</th>
+                        <% } %>
             </tr>
         </thead>
         <tbody>
-            <% assignments.forEach(a => { %>
+            <% assignments.forEach(a=> { %>
                 <tr>
-                    <td><%= a.title %></td>
-                    <td><%= a.subject.name %></td>
+                    <td>
+                        <%= a.title %>
+                    </td>
+                    <td>
+                        <%= a.subject.name %>
+                    </td>
 
-                    <% if (userRole === 'teacher') { %>
+                    <% if (userRole==='teacher' ) { %>
                         <td>
                             <a href="/assignment/edit/<%= a._id %>" class="button">Edit</a>
                             <a href="/assignment/details/<%= a._id %>" class="button">View Details</a>
@@ -101,13 +104,13 @@
                                 <button type="submit">Delete</button>
                             </form>
                         </td>
-                    <% } else if (userRole === 'student') { %>
-                        <td>
-                            <a href="/assignment/details/<%= a._id %>" class="button">View & Submit</a>
-                        </td>
-                    <% } %>
+                        <% } else if (userRole==='student' ) { %>
+                            <td>
+                                <a href="/assignment/details/<%= a._id %>" class="button">View & Submit</a>
+                            </td>
+                            <% } %>
                 </tr>
-            <% }) %>
+                <% }) %>
         </tbody>
     </table>
 
