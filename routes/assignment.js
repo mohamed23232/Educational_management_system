@@ -42,30 +42,60 @@ router.post('/', async (req, res) => {
   }
 });
 
-// ✅ New route: View all assignments for teachers (linked from dashboard)
+// ✅ New route: View all assignments for teachers and students
 router.get('/view', async (req, res) => {
 
   try {
-    // fetch all assignments based on the subjects the teacher is teaching
+    const userId = req.session.user.id;
+    let assignments;
 
-    const teacherId = req.session.user.id;
+    if (req.session.user?.role === 'teacher') {
+      // Step 1: Get the subjects the teacher teaches
+      const subjects = await Subject.find({ teacher: userId }).select('_id');
+      const subjectIds = subjects.map(subject => subject._id);
 
-    // Step 1: Get the subjects the teacher teaches
-    const subjects = await Subject.find({ teacher: teacherId }).select('_id');
-    const subjectIds = subjects.map(subject => subject._id);
+      // Step 2: Get assignments linked to those subjects
+      assignments = await Assignment.find({ subject: { $in: subjectIds } }).populate('subject');
+    } else if (req.session.user?.role === 'student') {
+      // Step 1: Get the subjects the student is enrolled in
+      const subjects = await Subject.find({ students: userId }).select('_id');
+      const subjectIds = subjects.map(subject => subject._id);
 
-    // Step 2: Get assignments linked to those subjects
-    const assignments = await Assignment.find({ subject: { $in: subjectIds } }).populate('subject');
+      // Step 2: Get assignments linked to those subjects
+      assignments = await Assignment.find({ subject: { $in: subjectIds } }).populate('subject');
+    }
+
     console.log('Assignments fetched:', assignments);
 
-    console.log('Assignments fetched:', assignments);
-    if (req.session.user?.role == 'teacher')res.render('view_assignment', { assignments, userRole: 'teacher' });
-    if (req.session.user?.role == 'student')res.render('view_assignment', { assignments, userRole: 'student' });
+    // Render assignments based on the role
+    res.render('view_assignment', { assignments, userRole: req.session.user.role });
+
   } catch (err) {
     console.error('Error fetching assignments:', err);
     res.status(500).send('Error fetching assignments');
   }
 });
+// Route to show assignment details (for both teachers and students)
+router.get('/details/:id', async (req, res) => {
+  try {
+    const assignment = await Assignment.findById(req.params.id).populate('subject');
+    const userRole = req.session.user?.role;
+
+    if (!assignment) {
+      return res.status(404).send('Assignment not found');
+    }
+
+    res.render('assignment_details', {
+      assignment,
+      userRole,
+      userId: req.session.user?.id
+    });
+  } catch (err) {
+    console.error('Error fetching assignment details:', err);
+    res.status(500).send('Internal server error');
+  }
+});
+
 
 
 module.exports = router;

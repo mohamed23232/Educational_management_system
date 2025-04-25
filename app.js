@@ -40,7 +40,7 @@ app.use(session({
 // app.use('/student', studentRoutes);
 // app.use('/subject', subjectRoutes);
 app.use('/assignment', assignmentRoutes);
-//app.use('/submission', submissionRoutes);
+app.use('/submission', submissionRoutes);
 app.use('/auth', authRoutes); // <-- Auth routes (login/register/dashboard/etc.)
 
 app.get('/', (req, res) => res.redirect('/auth/login'));
