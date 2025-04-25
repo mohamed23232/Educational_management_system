@@ -55,3 +55,10 @@ form {
 .top-button {
     margin-bottom: 20px;
 }
+.disabled-button {
+    background-color:  #e74c3c;
+    color: #fff;
+    border: none;
+    cursor: not-allowed;
+    padding: 5px 10px;
+}
