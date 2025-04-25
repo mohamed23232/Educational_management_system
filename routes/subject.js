@@ -76,56 +76,77 @@ router.get('/details/:id', async (req, res) => {
   }
 });
 
+// Edit Subject (GET route)
+router.get('/edit/:id', async (req, res) => {
+  // Ensure the user is an admin
+  if (req.session.user?.role !== 'admin') {
+    return res.status(403).send('Access denied');
+  }
 
-// router.get('/edit/:id', async (req, res) => {
-//   if (req.session.user?.role !== 'teacher') return res.status(403).send('Access denied');
+  try {
+    // Find the subject by its ID
+    const subject = await Subject.findById(req.params.id).populate('teacher');
+    const teachers = await Teacher.find(); // Get all teachers for the dropdown
+    const students = await Student.find();
 
-//   try {
-//     const assignment = await Assignment.findById(req.params.id);
-//     const subjects = await Subject.find({ teacher: req.session.user.id });
+    if (!subject) {
+      return res.status(404).send('Subject not found');
+    }
 
-//     if (!assignment) return res.status(404).send('Assignment not found');
+    // Render the 'edit_subject' page with subject and teachers data
+    res.render('edit_subject', { subject, teachers,students });
+  } catch (err) {
+    console.error('Error loading edit page:', err);
+    res.status(500).send('Error loading edit page');
+  }
+});
 
-//     res.render('edit_assignment', { assignment, subjects });
-//   } catch (err) {
-//     console.error('Error loading edit page:', err);
-//     res.status(500).send('Error loading edit page');
-//   }
-// });
+// Handle subject update (POST route)
+router.post('/edit/:id', async (req, res) => {
+  try {
+    const { title, description, teacher, students } = req.body;
 
-// // Handle assignment update
-// router.post('/edit/:id', async (req, res) => {
-//   try {
-//     const { title, description, dueDate, subject } = req.body;
+    if (!title || !teacher) {
+        console.log(title);
+      return res.status(400).send('Missing required fields',title);
+    }
 
-//     if (!title || !dueDate || !subject) {
-//       return res.status(400).send('Missing required fields');
-//     }
+    await Subject.findByIdAndUpdate(req.params.id, {
+      name: title,
+      description,
+      teacher,
+      students
+    });
 
-//     await Assignment.findByIdAndUpdate(req.params.id, {
-//       title,
-//       description,
-//       dueDate: new Date(dueDate),
-//       subject
-//     });
 
-//     res.redirect('/assignment/view');
-//   } catch (err) {
-//     console.error('Error updating assignment:', err);
-//     res.status(500).send('Error updating assignment');
-//   }
-// });
+    res.redirect('/subject/view');
+  } catch (err) {
+    console.error('Error creating subject:', err);
+    res.status(500).send('Error creating subject');
+  }
+});
+router.post('/delete/:id', async (req, res) => {
+  if (req.session.user?.role !== 'admin') return res.status(403).send('Access denied');
 
-// router.post('/delete/:id', async (req, res) => {
-//   if (req.session.user?.role !== 'teacher') return res.status(403).send('Access denied');
+  try {
+    // Find the subject by ID
+    const subject = await Subject.findById(req.params.id).populate('students');
 
-//   try {
-//     await Assignment.findByIdAndDelete(req.params.id);
-//     res.redirect('/assignment/view');
-//   } catch (err) {
-//     console.error('Error deleting assignment:', err);
-//     res.status(500).send('Error deleting assignment');
-//   }
-// });
+    if (!subject) return res.status(404).send('Subject not found');
+
+    // Loop over each assignment associated with the subject and delete them
+    // Assuming the assignments are associated with the subject
+    //await Assignment.deleteMany({ subject: req.params.id });
+
+    // Delete the subject itself
+    await Subject.findByIdAndDelete(req.params.id);
+
+    // Redirect to the assignments view page
+    res.redirect('/subject/view');
+  } catch (err) {
+    console.error('Error deleting assignment or subject:', err);
+    res.status(500).send('Error deleting assignment or subject');
+  }
+});
 
 module.exports = router;
