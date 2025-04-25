@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Subject</title>
+  <link rel="stylesheet" href="/css/creating_subject.css">
+</head>
+
+<body>
+  <div class="container">
+    <h1>Edit Subject: <%= subject.name %></h1>
+
+    <form action="/subject/edit/<%= subject._id %>" method="POST">
+      <label for="title">Subject Name:</label>
+      <input type="text" name="title" id="title" value="<%= subject.name %>" required />
+
+      <label for="description">Description:</label>
+      <textarea name="description" id="description" rows="4" required><%= subject.description %></textarea>
+
+      <label for="teacher">Teacher:</label>
+      <select name="teacher" id="teacher" required>
+        <% teachers.forEach(teacher => { %>
+          <option value="<%= teacher._id %>" <%= subject.teacher._id == teacher._id ? 'selected' : '' %> >
+            <%= teacher.username %>
+          </option>
+        <% }) %>
+      </select>
+
+      <label for="students">Students:</label>
+      <select name="students" id="students" multiple required>
+        <% 
+          // Create a Set of student IDs assigned to the subject
+          const assignedStudents = new Set(subject.students.map(s => s._id.toString()));
+        %>
+
+        <% students.forEach(student => { %>
+          <option value="<%= student._id %>" 
+            <% if (assignedStudents.has(student._id.toString())) { %>
+              selected
+            <% } %> >
+            <%= student.username %>
+          </option>
+        <% }) %>
+      </select>
+
+      <button type="submit">Update Subject</button>
+    </form>
+  </div>
+</body>
+
+</html>
