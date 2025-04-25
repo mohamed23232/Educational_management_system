@@ -12,7 +12,7 @@ router.get('/create', async (req, res) => {
   try {
     const teachers = await Teacher.find();
     const students = await Student.find();
-    res.render('create_subject', { teachers , students});
+    res.render('create_subject', { teachers, students });
     console.log('Create subject page rendered');
   } catch (err) {
     console.error('Error fetching subjects:', err);
@@ -26,15 +26,15 @@ router.post('/', async (req, res) => {
     const { title, description, teacher, students } = req.body;
 
     if (!title || !teacher) {
-        console.log(title);
-      return res.status(400).send('Missing required fields',title);
+      console.log(title);
+      return res.status(400).send('Missing required fields', title);
     }
     //console.log(title)
     const subject = new Subject({
-      name:title,
-      description:description,
+      name: title,
+      description: description,
       teacher: teacher,
-      students:students,
+      students: students,
     });
 
     await subject.save();
@@ -50,9 +50,9 @@ router.get('/view', async (req, res) => {
 
   try {
     // fetch all subjects based on the subjects the teacher is teaching
-    if (req.session.user?.role !== 'admin') return res.status(403).send('Access denied');
+    const user = req.session.user;
     const subjects = await Subject.find().populate('teacher', 'username');
-    res.render('view_subject', { subjects });
+    res.render('view_subject', { subjects, user });
 
     // console.log('Subjects fetched:', subjects);
     // res.render('view_subject', { subjects });
