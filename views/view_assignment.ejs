@@ -73,20 +73,30 @@
         <a href="/auth/<%= userRole %>_dashboard" class="button">Back to Dashboard</a>
     </div>
 
-    <% if (userRole === 'teacher') { %>
-        <table>
-            <thead>
-                <tr>
-                    <th>Title</th>
-                    <th>Subject</th>
+    <table>
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Subject</th>
+                <% if (userRole==='teacher' ) { %>
                     <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% assignments.forEach(a => { %>
-                    <tr>
-                        <td><%= a.title %></td>
-                        <td><%= a.subject.name %></td>
+                    <% } else if (userRole==='student' ) { %>
+                        <th>Submit</th>
+                        <% } %>
+            </tr>
+        </thead>
+        <tbody>
+            <% assignments.forEach(a=> { %>
+                <tr>
+                    <td>
+                        <%= a.title %>
+                    </td>
+                    <td>
+                        <%= a.subject.name %>
+                    </td>
+
+                    <% if (userRole==='teacher' ) { %>
+
                         <td>
                             <a href="/assignment/edit/<%= a._id %>" class="button">Edit</a>
                             <a href="/assignment/details/<%= a._id %>" class="button">View Details</a>
@@ -96,6 +106,7 @@
                                 <button type="submit">Delete</button>
                             </form>
                         </td>
+
                     </tr>
                 <% }) %>
             </tbody>
