@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>View Submissions</title>
+</head>
+
+<body>
+    <h1>Submissions for <%= submissions[0]?.assignment.title || 'Assignment' %>
+    </h1>
+
+    <% if (submissions.length===0) { %>
+        <p>No submissions yet.</p>
+        <% } else { %>
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Student</th>
+                        <th>Submitted</th>
+                        <th>Submission Date</th>
+                        <th>Grade</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% submissions.forEach(s=> { %>
+                        <tr>
+                            <td>
+                                <%= s.student.username %>
+                            </td>
+                            <td>
+                                <%= s.submitted ? 'Yes' : 'No' %>
+                            </td>
+                            <td>
+                                <%= s.submissionDate ? s.submissionDate.toLocaleString() : 'N/A' %>
+                            </td>
+
+                            <td>
+                                <%= s.grade !==undefined && s.grade !==null ? s.grade : 'Not graded' %>
+                            </td>
+                            <td>
+                                <a href="/assignment/grade/<%= s._id %>">
+                                    <button>
+                                        <%= s.grade !==undefined && s.grade !==null ? 'Edit Grade' : 'Grade' %>
+                                    </button>
+                                </a>
+                            </td>
+                        </tr>
+                        <% }) %>
+                </tbody>
+            </table>
+            <% } %>
+
+                <br>
+                <a href="/assignment/view">Back to Assignments</a>
+</body>
+
+</html>
