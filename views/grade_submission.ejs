@@ -3,33 +3,37 @@
 
 <head>
     <title>Grade Submission</title>
+    <link rel="stylesheet" href="/grade_submission.css"> <!-- Link to the CSS file -->
 </head>
 
 <body>
-    <h1>Grading Submission for <%= submission.student.username %>
+    <h1>Grading Assignment for <%= submission.student.username %>
     </h1>
+    <div class="container">
+        <div class="submission-details">
+            <h3>Assignment Content:</h3>
+            <p>
+                <%= submission.content %>
+            </p>
+        </div>
+        <div class="grading-form">
+            <form method="POST" action="/assignment/grade/<%= submission._id %>">
+                <label for="grade">Grade:</label><br>
+                <input type="text" id="grade" name="grade" required value="<%= submission.grade || '' %>"><br><br>
 
-    <h3>Submission Content:</h3>
-    <p>
-        <%= submission.content %>
-    </p>
+                <label for="feedback">Feedback:</label><br>
+                <textarea id="feedback" name="feedback" rows="4" cols="50"
+                    required><%= submission.feedback || '' %></textarea><br><br>
 
-    <form method="POST" action="/assignment/grade/<%= submission._id %>">
-        <label for="grade">Grade:</label><br>
-        <input type="text" id="grade" name="grade" required value="<%= submission.grade || '' %>"><br><br>
-
-        <label for="feedback">Feedback:</label><br>
-        <textarea id="feedback" name="feedback" rows="4" cols="50"
-            required><%= submission.feedback || '' %></textarea><br><br>
-
-        <button type="submit">
-            <%= submission.grade !==undefined && submission.grade !==null ? 'Update Grade' : 'Submit Grade' %>
-        </button>
-
-    </form>
-
-    <br>
-    <a href="/assignment/view">Back to Submissions</a>
+                <button type="submit">
+                    <%= submission.grade !==undefined && submission.grade !==null ? 'Update Grade' : 'Submit Grade' %>
+                </button>
+            </form>
+            <br>
+            <!-- Link back to the submissions page for the specific assignment -->
+            <a href="/assignment/view_submission/<%= assignment._id %>">Back to Submissions</a>
+        </div>
+    </div>
 </body>
 
 </html>
