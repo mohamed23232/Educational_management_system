@@ -11,7 +11,7 @@
 <body>
     <h2>Register</h2>
     <form action="/auth/register" method="POST">
-        <input name="username" placeholder="Name" required>
+        <input name="username" placeholder="username" required>
         <input name="password" type="password" placeholder="Password" required>
         <select name="role" required>
             <option value="student">Student</option>
@@ -19,6 +19,8 @@
         </select>
         <button type="submit">Register</button>
     </form>
+    <p>Already have an account? <a href="/auth/login">Login here</a></p> <!-- Link below the form -->
+
 </body>
 
 </html>

@@ -5,14 +5,12 @@ const Admin = require('../models/admin');
 const bcrypt = require('bcrypt');
 
 exports.renderLogin = (req, res) => {
+    res.render('login');
     // I need to logout any user before rendering the login page
     if (req.session.user) {
         req.session.destroy(() => {
-            console.log('User logged out before rendering login page');
         });
     }
-    res.render('login');
-    console.log('Login page rendered');
 };
 
 exports.renderRegister = (req, res) => {
@@ -23,31 +21,32 @@ exports.registerUser = async (req, res) => {
     const { username, password, role } = req.body;
 
     try {
-        if (role === 'teacher') {
-            const existingTeacher = await Teacher.findOne({ username });
-            if (existingTeacher) return res.send('Teacher with this username already exists.');
+        // Check if username already exists in any collection (Teacher, Student, Admin)
+        const existingTeacher = await Teacher.findOne({ username });
+        const existingStudent = await Student.findOne({ username });
+        const existingAdmin = await Admin.findOne({ username });
 
-            const hashedPassword = await bcrypt.hash(password, 10);
+        if (existingTeacher || existingStudent || existingAdmin) {
+            return res.send('Username already exists for another role. Please choose a different username.');
+        }
+
+        // Hash the password before saving
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Create the new user based on the role
+        if (role === 'teacher') {
             const newTeacher = new Teacher({ username, password: hashedPassword });
             await newTeacher.save();
             return res.redirect('/auth/login');
         }
 
         if (role === 'student') {
-            const existingStudent = await Student.findOne({ username });
-            if (existingStudent) return res.send('Student with this username already exists.');
-
-            const hashedPassword = await bcrypt.hash(password, 10);
             const newStudent = new Student({ username, password: hashedPassword });
             await newStudent.save();
             return res.redirect('/auth/login');
         }
 
         if (role === 'admin') {
-            const existingAdmin = await Admin.findOne({ username });
-            if (existingAdmin) return res.send('Admin with this username already exists.');
-
-            const hashedPassword = await bcrypt.hash(password, 10);
             const newAdmin = new Admin({ username, password: hashedPassword });
             await newAdmin.save();
             return res.redirect('/auth/login');

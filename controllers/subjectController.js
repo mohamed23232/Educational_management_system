@@ -60,7 +60,7 @@ exports.viewSubjectDetails = async (req, res) => {
     const subject = await Subject.findById(req.params.id).populate('students', 'username');
     if (!subject) return res.status(404).send('Subject not found');
 
-    res.render('students_list', { subject });
+    res.render('view_students', { subject });
   } catch (err) {
     console.error('Error fetching subject details:', err);
     res.status(500).send('Error fetching subject details');
