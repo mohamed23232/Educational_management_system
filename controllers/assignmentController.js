@@ -166,15 +166,32 @@ exports.viewSubmissions = async (req, res) => {
 };
 
 // Render page to grade a submission
+// Render page to grade a submission
 exports.renderGradeForm = async (req, res) => {
     try {
-        const submission = await Submission.findById(req.params.id).populate('student');
-        res.render('grade_submission', { submission });
+        // Fetch the submission along with the student and assignment details
+        const submission = await Submission.findById(req.params.id)
+            .populate('student')
+            .populate('assignment'); // Populate the assignment data
+
+        if (!submission) {
+            return res.status(404).send('Submission not found');
+        }
+
+        // Fetch the assignment data for the link back to submissions page
+        const assignment = submission.assignment;
+
+        // Render the grade form and pass both submission and assignment data
+        res.render('grade_submission', { 
+            submission,
+            assignment // Pass the assignment object
+        });
     } catch (err) {
         console.error('Error loading submission:', err);
         res.status(500).send('Failed to load submission.');
     }
 };
+
 
 // Submit the grade and feedback
 exports.submitGrade = async (req, res) => {
