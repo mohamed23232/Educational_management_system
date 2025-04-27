@@ -5,12 +5,12 @@ const MongoStore = require('connect-mongo');
 const path = require('path');
 const connectDB = require('./db');
 
-const teacherRoutes = require('./routes/teacher');
-const studentRoutes = require('./routes/student');
+
 const subjectRoutes = require('./routes/subject');
 const assignmentRoutes = require('./routes/assignment');
 const submissionRoutes = require('./routes/submission');
 const authRoutes = require('./routes/auth'); // <-- Add auth routes
+const error = require('./routes/error'); // <-- Error routes
 
 const app = express();
 app.use(express.static('public'));
@@ -37,14 +37,18 @@ app.use(session({
 }));
 
 // Routes
-// app.use('/teacher', teacherRoutes);
-// app.use('/student', studentRoutes);
+
 app.use('/subject', subjectRoutes);
 app.use('/assignment', assignmentRoutes);
 app.use('/submission', submissionRoutes);
 app.use('/auth', authRoutes); // <-- Auth routes (login/register/dashboard/etc.)
-
 app.get('/', (req, res) => res.redirect('/auth/login'));
+// Handle 404 - Page Not Found
+app.use(error);
+
+
+
+
 
 
 
