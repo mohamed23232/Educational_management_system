@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Create Subject</title>
-  <link rel="stylesheet" href="/css/creating_subject.css">
+  <link rel="stylesheet" href="/creating_subject.css">
 </head>
 
 <body>
@@ -25,16 +25,24 @@
         <% }) %>
       </select>
 
-      <label for="students">Students:</label>
-      <select name="students" id="students" multiple required>
+      <label>Students:</label>
+      <div class="student-list" id="student-list">
         <% students.forEach(student => { %>
-          <option value="<%= student._id %>"><%= student.username %></option>
+          <div class="student-item" id="student-<%= student._id %>">
+            <span><%= student.username %></span>
+            <button type="button" class="add" onclick="addStudent('<%= student._id %>', '<%= student.username %>')">Add</button>
+            <button type="button" class="remove" onclick="removeStudent('<%= student._id %>')">Remove</button>
+          </div>
         <% }) %>
-      </select>
+      </div>
+
+      <div id="selected-students-container"></div> <!-- Hidden inputs here -->
 
       <button type="submit">Create Subject</button>
     </form>
   </div>
+
+  <script src="/script.js"></script>
 </body>
 
 </html>
