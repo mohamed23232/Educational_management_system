@@ -3,18 +3,23 @@ const Assignment = require('../models/assignment');
 
 // Handle assignment submission
 exports.submitAssignment = async (req, res) => {
+    const redirectTo = `/auth/${req.session.user?.role}_dashboard`;
     const { assignmentId } = req.params;
     const { content } = req.body;
 
     try {
         if (!content) {
             console.error('Content is missing');
-            return res.status(400).send('Content is required');
+            const message = "Content is required";
+            const statusCode = 400;
+            return res.status(statusCode).render('error_page', { redirectTo, message, statusCode });
         }
 
         if (!req.session.user || !req.session.user.id) {
             console.error('User not logged in');
-            return res.status(403).send('You must be logged in to submit an assignment.');
+            const message = "You must be logged in to submit an assignment.";
+            const statusCode = 403;
+            return res.status(statusCode).render('error_page', { redirectTo, message, statusCode });
         }
 
         const studentId = req.session.user.id;
@@ -23,7 +28,9 @@ exports.submitAssignment = async (req, res) => {
         const assignment = await Assignment.findById(assignmentId);
         if (!assignment) {
             console.error(`Assignment with ID ${assignmentId} not found`);
-            return res.status(404).send('Assignment not found');
+            const message = "Assignment not found";
+            const statusCode = 404;
+            return res.status(statusCode).render('error_page', { redirectTo, message, statusCode });
         }
 
         const existingSubmission = await Submission.findOne({
@@ -33,7 +40,9 @@ exports.submitAssignment = async (req, res) => {
 
         if (existingSubmission) {
             console.warn('Duplicate submission attempt by student:', studentId);
-            return res.status(409).send('You have already submitted this assignment.');
+            const message = "You have already submitted this assignment.";
+            const statusCode = 409;
+            return res.status(statusCode).render('error_page', { redirectTo, message, statusCode });
         }
 
         const submission = new Submission({
@@ -58,6 +67,8 @@ exports.submitAssignment = async (req, res) => {
         res.redirect('/assignment/view');
     } catch (err) {
         console.error('Error submitting assignment:', err);
-        res.status(500).send('Internal Server Error');
+        const message = "Internal Server Error";
+        const statusCode = 500;
+        return res.status(statusCode).render('error_page', { redirectTo, message, statusCode });
     }
 };
