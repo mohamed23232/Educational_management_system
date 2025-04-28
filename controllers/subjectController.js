@@ -60,6 +60,7 @@ exports.viewSubjects = async (req, res) => {
   try {
     const user = req.session.user;
     const subjects = await Subject.find().populate('teacher', 'username');
+    console.log(subjects);
     res.render('view_subject', { subjects, user });
   } catch (err) {
     console.error('Error fetching subjects:', err);
@@ -89,35 +90,27 @@ exports.viewSubjectDetails = async (req, res) => {
   }
 };
 
-// Render edit subject form
 exports.renderEditForm = async (req, res) => {
-  const redirectTo = `/auth/${req.session.user?.role}_dashboard`;
-  if (req.session.user?.role !== 'admin') {
-    const message = "Access Denied. Only admins can access this page.";
-    const statusCode = 403;
-    return res.status(statusCode).render('error_page', { redirectTo, message, statusCode });
-  }
+  if (req.session.user?.role !== 'admin') return res.status(403).send('Access denied');
 
   try {
-    const subject = await Subject.findById(req.params.id).populate('teacher');
+    const subject = await Subject.findById(req.params.id).populate('teacher').populate('students');
     const teachers = await Teacher.find();
     const students = await Student.find();
 
     if (!subject) {
-      const message = "Subject not found";
-      const statusCode = 404;
-      return res.status(statusCode).render('error_page', { redirectTo, message, statusCode });
+      return res.status(404).send('Subject not found');
     }
 
-    res.render('edit_subject', { subject, teachers, students });
+    // Create a Set of assigned students
+    const assignedStudents = new Set(subject.students.map(s => s._id.toString()));
+
+    res.render('edit_subject', { subject, teachers, students, assignedStudents });
   } catch (err) {
     console.error('Error loading edit page:', err);
-    const message = "Error loading edit page";
-    const statusCode = 500;
-    return res.status(statusCode).render('error_page', { redirectTo, message, statusCode });
+    res.status(500).send('Error loading edit page');
   }
 };
-
 // Handle subject update
 exports.updateSubject = async (req, res) => {
   const redirectTo = `/auth/${req.session.user?.role}_dashboard`;

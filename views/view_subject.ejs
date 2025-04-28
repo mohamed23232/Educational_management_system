@@ -88,18 +88,20 @@
                 </thead>
                 <tbody>
                     <% subjects.forEach(subject=> { %>
-                        <tr>
-                            <td>
-                                <%= subject.name %>
-                            </td>
-                            <td>
-                                <%= subject.teacher?.username %>
-                            </td>
-                            <td>
-                                <%= subject.description %>
-                            </td>
-                        </tr>
-                        <% }) %>
+                        <% if (subject.students?.some(studentId=> studentId.toString() === user.id)) { %>
+                            <tr>
+                                <td>
+                                    <%= subject.name %>
+                                </td>
+                                <td>
+                                    <%= subject.teacher?.username %>
+                                </td>
+                                <td>
+                                    <%= subject.description %>
+                                </td>
+                            </tr>
+                            <% } %>
+                                <% }) %>
                 </tbody>
             </table>
             <% } %>
