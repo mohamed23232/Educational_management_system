@@ -3,14 +3,15 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Page Not Found</title>
+    <title>Error <%= statusCode %> - <%= message || 'Page Not Found' %></title>
     <link rel="stylesheet" href="/error_page.css">
 </head>
 
 <body>
-    <h1>404</h1>
-    <p>Oops! Page not found.</p>
-    <a href="<%= redirectTo %>">Back Home</a> <!-- Redirect dynamically -->
+    <h1><%= statusCode %></h1>
+    <p><%= message || 'Oops! Page not found.' %></p>  <!-- Use message if provided, otherwise default text -->
+    
+    <a href="<%= redirectTo || '/' %>">Back Home</a> <!-- Redirect dynamically, default to homepage if no redirectTo -->
 </body>
 
 </html>

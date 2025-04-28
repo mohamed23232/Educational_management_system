@@ -1,10 +1,19 @@
 const Assignment = require('../models/assignment');
 const Subject = require('../models/subject');
 const Submission = require('../models/submission');
-
 // Render create assignment form
 exports.renderCreateForm = async (req, res) => {
-    if (req.session.user?.role !== 'teacher') return res.status(403).send('Access denied');
+    const redirectTo = `/auth/${req.session.user?.role}_dashboard`;  
+    console.log(req.session.user); 
+
+    // Check if user is not authenticated or not a teacher
+    if (!req.session.user || req.session.user.role !== 'teacher') {
+        const message = "Access Denied. Only teachers can access this page.";
+        const statusCode = 403;
+        // Return to stop further code execution
+        return res.status(statusCode).render('error_page', { redirectTo, message, statusCode });
+    }
+
     try {
         const teacherId = req.session.user.id;
         const subjects = await Subject.find({ teacher: teacherId });
@@ -12,9 +21,13 @@ exports.renderCreateForm = async (req, res) => {
         console.log('Create assignment page rendered');
     } catch (err) {
         console.error('Error fetching subjects:', err);
-        res.status(500).send('Error fetching subjects');
+        const message = 'Internal Server Error while fetching subjects.';
+        const statusCode = 500;
+        // Return to stop further code execution
+        return res.status(statusCode).render('error_page', { redirectTo, message, statusCode });
     }
 };
+
 
 // Handle assignment creation
 exports.createAssignment = async (req, res) => {
