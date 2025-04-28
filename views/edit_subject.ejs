@@ -4,12 +4,14 @@
 <head>
   <meta charset="UTF-8">
   <title>Edit Subject</title>
-  <link rel="stylesheet" href="/css/creating_subject.css">
+  <link rel="stylesheet" href="/create_subject.css">
 </head>
 
 <body>
+  <h1>Edit Subject: <%= subject.name %>
+  </h1>
   <div class="container">
-    <h1>Edit Subject: <%= subject.name %></h1>
+
 
     <form action="/subject/edit/<%= subject._id %>" method="POST">
       <label for="title">Subject Name:</label>
@@ -20,33 +22,58 @@
 
       <label for="teacher">Teacher:</label>
       <select name="teacher" id="teacher" required>
-        <% teachers.forEach(teacher => { %>
-          <option value="<%= teacher._id %>" <%= subject.teacher._id == teacher._id ? 'selected' : '' %> >
+        <% teachers.forEach(teacher=> { %>
+          <option value="<%= teacher._id %>" <%=subject.teacher._id.toString()===teacher._id.toString() ? 'selected'
+            : '' %>>
             <%= teacher.username %>
           </option>
-        <% }) %>
+          <% }) %>
       </select>
 
-      <label for="students">Students:</label>
-      <select name="students" id="students" multiple required>
-        <% 
-          // Create a Set of student IDs assigned to the subject
-          const assignedStudents = new Set(subject.students.map(s => s._id.toString()));
-        %>
+      <label>Students:</label>
+      <div class="student-list" id="student-list">
+        <% students.forEach(student=> { %>
+          <div class="student-item" id="student-<%= student._id %>">
+            <span>
+              <%= student.username %>
+            </span>
+            <button type="button" class="add" onclick="addStudent('<%= student._id %>', '<%= student.username %>')">
+              Add
+            </button>
+            <button type="button" class="remove" onclick="removeStudent('<%= student._id %>')">
+              Remove
+            </button>
+          </div>
+          <% }) %>
+      </div>
 
-        <% students.forEach(student => { %>
-          <option value="<%= student._id %>" 
-            <% if (assignedStudents.has(student._id.toString())) { %>
-              selected
-            <% } %> >
-            <%= student.username %>
-          </option>
-        <% }) %>
-      </select>
+      <div id="selected-students-container">
+        <% assignedStudents.forEach(studentId=> { %>
+          <input type="hidden" name="students" value="<%= studentId %>" id="selected-student-<%= studentId %>">
+          <% }) %>
+      </div>
 
       <button type="submit">Update Subject</button>
+      <a href="/auth/admin_dashboard" class="button">Back to Dashboard</a>
     </form>
   </div>
 </body>
+<script src="/script.js"></script>
+<script>
+  // Assigned students from server
+  const assignedStudents = new Set([
+    <% assignedStudents.forEach(studentId => { %>
+    "<%= studentId %>",
+    <% }) %>
+  ]);
+
+  // Auto-add the assigned students when page loads
+  window.addEventListener('DOMContentLoaded', () => {
+    assignedStudents.forEach(studentId => {
+      const studentName = document.querySelector(`#student-${studentId} span`).innerText;
+      addStudent(studentId, studentName);
+    });
+  });
+</script>
 
 </html>

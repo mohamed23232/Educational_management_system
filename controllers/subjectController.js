@@ -66,13 +66,11 @@ exports.viewSubjectDetails = async (req, res) => {
     res.status(500).send('Error fetching subject details');
   }
 };
-
-// Render edit subject form
 exports.renderEditForm = async (req, res) => {
   if (req.session.user?.role !== 'admin') return res.status(403).send('Access denied');
 
   try {
-    const subject = await Subject.findById(req.params.id).populate('teacher');
+    const subject = await Subject.findById(req.params.id).populate('teacher').populate('students');
     const teachers = await Teacher.find();
     const students = await Student.find();
 
@@ -80,13 +78,15 @@ exports.renderEditForm = async (req, res) => {
       return res.status(404).send('Subject not found');
     }
 
-    res.render('edit_subject', { subject, teachers, students });
+    // Create a Set of assigned students
+    const assignedStudents = new Set(subject.students.map(s => s._id.toString()));
+
+    res.render('edit_subject', { subject, teachers, students, assignedStudents });
   } catch (err) {
     console.error('Error loading edit page:', err);
     res.status(500).send('Error loading edit page');
   }
 };
-
 // Handle subject update
 exports.updateSubject = async (req, res) => {
   try {
