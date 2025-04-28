@@ -10,7 +10,6 @@ exports.renderCreateForm = async (req, res) => {
     if (!req.session.user || req.session.user.role !== 'teacher') {
         const message = "Access Denied. Only teachers can access this page.";
         const statusCode = 403;
-        // Return to stop further code execution
         return res.status(statusCode).render('error_page', { redirectTo, message, statusCode });
     }
 
@@ -23,7 +22,6 @@ exports.renderCreateForm = async (req, res) => {
         console.error('Error fetching subjects:', err);
         const message = 'Internal Server Error while fetching subjects.';
         const statusCode = 500;
-        // Return to stop further code execution
         return res.status(statusCode).render('error_page', { redirectTo, message, statusCode });
     }
 };
@@ -31,10 +29,13 @@ exports.renderCreateForm = async (req, res) => {
 
 // Handle assignment creation
 exports.createAssignment = async (req, res) => {
+    const redirectTo = `/auth/${req.session.user?.role}_dashboard`;
     try {
         const { title, description, dueDate, subject } = req.body;
         if (!title || !dueDate || !subject) {
-            return res.status(400).send('Missing required fields');
+            const message = "Missing required fields";
+            const statusCode = 400;
+            return res.status(statusCode).render('error_page', { redirectTo, message, statusCode });
         }
         const assignment = new Assignment({
             title,
@@ -47,12 +48,15 @@ exports.createAssignment = async (req, res) => {
         res.redirect('/auth/teacher_dashboard');
     } catch (err) {
         console.error('Error creating assignment:', err);
-        res.status(500).send('Error creating assignment');
+        const message = "Error creating assignment";
+        const statusCode = 500;
+        return res.status(statusCode).render('error_page', { redirectTo, message, statusCode });
     }
 };
 
 // View assignments
 exports.viewAssignments = async (req, res) => {
+    const redirectTo = `/auth/${req.session.user?.role}_dashboard`;
     try {
         const userId = req.session.user.id;
         const currentDate = new Date();
@@ -95,20 +99,30 @@ exports.viewAssignments = async (req, res) => {
             });
         }
 
-        res.status(403).send('Unauthorized role');
+        const message = "Unauthorized role";
+        const statusCode = 403;
+        return res.status(statusCode).render('error_page', { redirectTo, message, statusCode });
     } catch (err) {
         console.error('Error fetching assignments:', err);
-        res.status(500).send('Error fetching assignments');
     }
 };
 
 // Render edit assignment page
 exports.renderEditForm = async (req, res) => {
-    if (req.session.user?.role !== 'teacher') return res.status(403).send('Access denied');
+    const redirectTo = `/auth/${req.session.user?.role}_dashboard`;
+    if (req.session.user?.role !== 'teacher'){
+        const message = "Access Denied. Only teachers can access this page.";
+        const statusCode = 403;
+        return res.status(statusCode).render('error_page', { redirectTo, message, statusCode });
+    }
     try {
         const assignment = await Assignment.findById(req.params.id);
         const subjects = await Subject.find({ teacher: req.session.user.id });
-        if (!assignment) return res.status(404).send('Assignment not found');
+        if (!assignment){
+            const message = "Assignment not found";
+            const statusCode = 404;
+            return res.status(statusCode).render('error_page', { redirectTo, message, statusCode });
+        }
         res.render('edit_assignment', { assignment, subjects });
     } catch (err) {
         console.error('Error loading edit page:', err);
@@ -118,10 +132,13 @@ exports.renderEditForm = async (req, res) => {
 
 // Handle assignment update
 exports.updateAssignment = async (req, res) => {
+    const redirectTo = `/auth/${req.session.user?.role}_dashboard`;
     try {
         const { title, description, dueDate, subject } = req.body;
         if (!title || !dueDate || !subject) {
-            return res.status(400).send('Missing required fields');
+            const message = "Missing required fields";
+            const statusCode = 400;
+            return res.status(statusCode).render('error_page', { redirectTo, message, statusCode });
         }
         await Assignment.findByIdAndUpdate(req.params.id, {
             title,
@@ -131,28 +148,43 @@ exports.updateAssignment = async (req, res) => {
         });
         res.redirect('/assignment/view');
     } catch (err) {
-        console.error('Error updating assignment:', err);
-        res.status(500).send('Error updating assignment');
+        console.error('Error updating assignment', err);
+        const message = "Error updating assignment";
+        const statusCode = 500;
+        return res.status(statusCode).render('error_page', { redirectTo, message, statusCode });
     }
 };
 
 // Handle assignment deletion
 exports.deleteAssignment = async (req, res) => {
-    if (req.session.user?.role !== 'teacher') return res.status(403).send('Access denied');
+    const redirectTo = `/auth/${req.session.user?.role}_dashboard`;
+    if (req.session.user?.role !== 'teacher'){
+        const message = "Access Denied. Only teachers can access this page.";
+        const statusCode = 403;
+        // Return to stop further code execution
+        return res.status(statusCode).render('error_page', { redirectTo, message, statusCode });
+    }
     try {
         await Assignment.findByIdAndDelete(req.params.id);
         res.redirect('/assignment/view');
     } catch (err) {
         console.error('Error deleting assignment:', err);
-        res.status(500).send('Error deleting assignment');
+        const message = "Error deleting assignment";
+        const statusCode = 500;
+        return res.status(statusCode).render('error_page', { redirectTo, message, statusCode });
     }
 };
 
 // Show assignment details
 exports.viewAssignmentDetails = async (req, res) => {
+    const redirectTo = `/auth/${req.session.user?.role}_dashboard`;
     try {
         const assignment = await Assignment.findById(req.params.id).populate('subject');
-        if (!assignment) return res.status(404).send('Assignment not found');
+        if (!assignment) {
+            const message = "Assignment not found";
+            const statusCode = 404;
+            return res.status(statusCode).render('error_page', { redirectTo, message, statusCode });
+        }
         res.render('assignment_details', {
             assignment,
             userRole: req.session.user?.role,
@@ -160,13 +192,20 @@ exports.viewAssignmentDetails = async (req, res) => {
         });
     } catch (err) {
         console.error('Error fetching assignment details:', err);
-        res.status(500).send('Internal server error');
+        const message = "Internal server error";
+        const statusCode = 500;
+        return res.status(statusCode).render('error_page', { redirectTo, message, statusCode });
     }
 };
 
 // View all submissions for a specific assignment
 exports.viewSubmissions = async (req, res) => {
-    if (req.session.user?.role !== 'teacher') return res.status(403).send('Access denied');
+    const redirectTo = `/auth/${req.session.user?.role}_dashboard`;
+    if (req.session.user?.role !== 'teacher'){
+        const message = "Access denied";
+        const statusCode = 403;
+        return res.status(statusCode).render('error_page', { redirectTo, message, statusCode });
+    }
     try {
         const submissions = await Submission.find({ assignment: req.params.assignmentId })
             .populate('student')
@@ -174,13 +213,15 @@ exports.viewSubmissions = async (req, res) => {
         res.render('view_submissions', { submissions });
     } catch (err) {
         console.error('Error fetching submissions:', err);
-        res.status(500).send('Error fetching submissions');
+        const message = "Error fetching submissions";
+        const statusCode = 500;
+        return res.status(statusCode).render('error_page', { redirectTo, message, statusCode });
     }
 };
 
 // Render page to grade a submission
-// Render page to grade a submission
 exports.renderGradeForm = async (req, res) => {
+    const redirectTo = `/auth/${req.session.user?.role}_dashboard`;
     try {
         // Fetch the submission along with the student and assignment details
         const submission = await Submission.findById(req.params.id)
@@ -188,7 +229,9 @@ exports.renderGradeForm = async (req, res) => {
             .populate('assignment'); // Populate the assignment data
 
         if (!submission) {
-            return res.status(404).send('Submission not found');
+            const message = "Submission not found";
+            const statusCode = 404;
+            return res.status(statusCode).render('error_page', { redirectTo, message, statusCode });
         }
 
         // Fetch the assignment data for the link back to submissions page
@@ -201,19 +244,24 @@ exports.renderGradeForm = async (req, res) => {
         });
     } catch (err) {
         console.error('Error loading submission:', err);
-        res.status(500).send('Failed to load submission.');
+        const message = "Failed to load submission.";
+        const statusCode = 500;
+        return res.status(statusCode).render('error_page', { redirectTo, message, statusCode });
     }
 };
 
 
 // Submit the grade and feedback
 exports.submitGrade = async (req, res) => {
+    const redirectTo = `/auth/${req.session.user?.role}_dashboard`;
     try {
         const { grade, feedback } = req.body;
         await Submission.findByIdAndUpdate(req.params.id, { grade, feedback });
         res.redirect('/assignment/view');
     } catch (err) {
         console.error('Error submitting grade:', err);
-        res.status(500).send('Failed to submit grade.');
+        const message = "Failed to submit grade";
+        const statusCode = 500;
+        return res.status(statusCode).render('error_page', { redirectTo, message, statusCode });
     }
 };
