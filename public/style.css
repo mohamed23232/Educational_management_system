@@ -1,0 +1,49 @@
+/* Student Add Button */
+.student-item button.add {
+  background-color: #4CAF50; /* Green */
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+/* Add Button Hover */
+.student-item button.add:hover {
+  background-color: #333834;
+}
+
+/* Student Remove Button */
+.student-item button.remove {
+  background-color: #f44336; /* Red */
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+/* Remove Button Hover */
+.student-item button.remove:hover {
+  background-color: #d32f2f;
+}
+
+/* Selected Student */
+.student-item.selected {
+  opacity: 0.6;
+}
+
+/* Add button when student is selected */
+.student-item.selected button.add {
+  background-color: #9e9e9e; /* Gray */
+  cursor: not-allowed;
+}
+
+/* (Optional) Slightly lighter Remove button when selected */
+.student-item.selected button.remove {
+  background-color: #e53935;
+}
