@@ -43,3 +43,7 @@ build/
 # OS-specific files
 .DS_Store
 Thumbs.db
+
+# docker files
+Dockerfile
+.dockerignore

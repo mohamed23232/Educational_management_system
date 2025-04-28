@@ -60,6 +60,7 @@ exports.viewSubjects = async (req, res) => {
   try {
     const user = req.session.user;
     const subjects = await Subject.find().populate('teacher', 'username');
+    console.log(subjects);
     res.render('view_subject', { subjects, user });
   } catch (err) {
     console.error('Error fetching subjects:', err);
