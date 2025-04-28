@@ -4,12 +4,12 @@
 <head>
   <meta charset="UTF-8">
   <title>Create Subject</title>
-  <link rel="stylesheet" href="/creating_subject.css">
+  <link rel="stylesheet" href="/create_subject.css">
 </head>
 
 <body>
+  <h1>Create a New Subject</h1>
   <div class="container">
-    <h1>Create a New Subject</h1>
 
     <form action="/subject" method="POST">
       <label for="title">Subject Name:</label>
@@ -20,25 +20,31 @@
 
       <label for="teacher">Teacher:</label>
       <select name="teacher" id="teacher" required>
-        <% teachers.forEach(teacher => { %>
-          <option value="<%= teacher._id %>"><%= teacher.username %></option>
-        <% }) %>
+        <% teachers.forEach(teacher=> { %>
+          <option value="<%= teacher._id %>">
+            <%= teacher.username %>
+          </option>
+          <% }) %>
       </select>
 
       <label>Students:</label>
       <div class="student-list" id="student-list">
-        <% students.forEach(student => { %>
+        <% students.forEach(student=> { %>
           <div class="student-item" id="student-<%= student._id %>">
-            <span><%= student.username %></span>
-            <button type="button" class="add" onclick="addStudent('<%= student._id %>', '<%= student.username %>')">Add</button>
+            <span>
+              <%= student.username %>
+            </span>
+            <button type="button" class="add"
+              onclick="addStudent('<%= student._id %>', '<%= student.username %>')">Add</button>
             <button type="button" class="remove" onclick="removeStudent('<%= student._id %>')">Remove</button>
           </div>
-        <% }) %>
+          <% }) %>
       </div>
 
       <div id="selected-students-container"></div> <!-- Hidden inputs here -->
 
       <button type="submit">Create Subject</button>
+      <a href="/auth/admin_dashboard" class="button">Back to Dashboard</a>
     </form>
   </div>
 

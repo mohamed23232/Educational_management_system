@@ -5,7 +5,6 @@
   box-sizing: border-box;
 }
 
-/* Body and page styling */
 body {
   font-family: Arial, sans-serif;
   background-color: #f4f7fc;
@@ -17,16 +16,15 @@ body {
   height: 100vh;
 }
 
-/* Heading styling */
 h1 {
   text-align: center;
   color: #2e8af4;
-  margin-bottom: 20px;
+  margin-bottom: 0px;
+  margin-right: 100px;
   font-weight: bold;
   font-size: 45px;
 }
 
-/* Form container */
 form {
   background-color: #fff;
   padding: 30px;
@@ -34,24 +32,26 @@ form {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: 600px;
+  overflow: hidden;
+  /* Prevent elements from overflowing */
+  box-sizing: border-box;
+  /* Ensure padding is included in width/height */
 }
 
-/* Label styling */
 label {
   font-size: 16px;
   font-weight: bold;
-  margin-top: 15px;
   margin-bottom: 8px;
-  display: block;
+  display: inline-block;
   color: #333;
 }
 
-/* Input fields, Textarea, Select */
 input[type="text"],
 textarea,
 select,
 input[type="datetime-local"] {
-  width: 100%;
+  width: calc(100% - 20px);
+  /* Add padding to prevent touching edges */
   padding: 10px;
   margin: 8px 0 20px 0;
   border: 1px solid #ddd;
@@ -64,9 +64,42 @@ textarea {
   resize: vertical;
 }
 
+button {
+  background-color: #4A90E2;
+  color: #fff;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 15%;
+  margin-top: 10px;
+}
+
+button:hover {
+  background-color: #357ABD;
+}
+
+a {
+  display: block;
+  text-align: center;
+  margin-top: 10px;
+  color: #4A90E2;
+  text-decoration: none;
+  font-size: 16px;
+  width: 100%;
+  /* Ensure it stays within the form's width */
+  box-sizing: border-box;
+  /* Include padding and borders in width */
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
 /* Student Add Button */
 .student-item button.add {
-  background-color: #4CAF50; /* Green */
+  background-color: #4CAF50;
+  /* Green */
   color: white;
   padding: 5px 10px;
   border-radius: 5px;
@@ -83,7 +116,8 @@ textarea {
 
 /* Student Remove Button */
 .student-item button.remove {
-  background-color: #f44336; /* Red */
+  background-color: #f44336;
+  /* Red */
   color: white;
   padding: 5px 10px;
   border-radius: 5px;
@@ -105,7 +139,8 @@ textarea {
 
 /* Add button when student is selected */
 .student-item.selected button.add {
-  background-color: #9e9e9e; /* Gray */
+  background-color: #9e9e9e;
+  /* Gray */
   cursor: not-allowed;
 }
 
@@ -113,8 +148,8 @@ textarea {
 .student-item.selected button.remove {
   background-color: #e53935;
 }
-/* Submit Button */
-form > button[type="submit"] {
+
+form>button[type="submit"] {
   background-color: #4A90E2;
   color: #fff;
   font-size: 16px;
@@ -126,6 +161,6 @@ form > button[type="submit"] {
   margin-top: 20px;
 }
 
-form > button[type="submit"]:hover {
+form>button[type="submit"]:hover {
   background-color: #357ABD;
 }
